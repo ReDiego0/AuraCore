@@ -3,6 +3,7 @@ package org.ReDiego0.auracore
 import com.palmergames.bukkit.towny.TownyAPI
 import org.ReDiego0.auracore.climate.ClimateManager
 import org.ReDiego0.auracore.extensions.AuraPAPIExpansion
+import org.ReDiego0.auracore.tax.TaxManager
 import org.bukkit.plugin.java.JavaPlugin
 
 class Auracore : JavaPlugin() {
@@ -15,6 +16,9 @@ class Auracore : JavaPlugin() {
     lateinit var climateManager: ClimateManager
         private set
 
+    lateinit var taxManager: TaxManager
+        private set
+
     lateinit var townyAPI: TownyAPI
         private set
 
@@ -24,6 +28,10 @@ class Auracore : JavaPlugin() {
 
         climateManager = ClimateManager(this)
         logger.info("ClimateManager inicializado.")
+
+        taxManager = TaxManager(this)
+        logger.info("TaxManager inicializado.")
+
         climateManager.startClimateTimer(
             changeInterval = 600L // 30 segundos || DEBUG
         )
