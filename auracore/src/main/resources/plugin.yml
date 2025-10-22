@@ -1,0 +1,10 @@
+name: auracore
+version: ${project.version}
+main: org.ReDiego0.auracore.Auracore
+api-version: '1.21'
+author: ReDiego0
+depend:
+  - Towny
+softdepend:
+  - Vault
+  - PlaceholderAPI
