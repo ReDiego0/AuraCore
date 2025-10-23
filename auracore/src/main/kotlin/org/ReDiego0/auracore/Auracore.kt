@@ -33,7 +33,7 @@ class Auracore : JavaPlugin() {
         logger.info("TaxManager inicializado.")
 
         climateManager.startClimateTimer(
-            changeInterval = 350L // 15 segundos || DEBUG
+            changeInterval = 36000L
         )
         climateManager.startEffectApplicator(
             checkInterval = 20L

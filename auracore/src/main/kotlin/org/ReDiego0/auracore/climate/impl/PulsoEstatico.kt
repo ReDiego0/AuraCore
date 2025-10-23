@@ -28,7 +28,7 @@ object PulsoEstatico : Climate{
             true,
         )
 
-        val blindnessDuration = Random.nextInt(40, 100)
+        val blindnessDuration = Random.nextInt(60, 120)
         val blindness = PotionEffect(
             PotionEffectType.BLINDNESS,
             blindnessDuration,
@@ -47,7 +47,7 @@ object PulsoEstatico : Climate{
 
         player.addPotionEffect(slowness)
 
-        if (Random.nextDouble() < 0.15) {
+        if (Random.nextDouble() < 0.10) {
             player.addPotionEffect(blindness)
         }
     }
