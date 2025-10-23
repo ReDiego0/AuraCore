@@ -51,7 +51,9 @@ object MareaRoja : Climate {
                 } else {
                     mainHand.itemMeta = meta
                 }
+             }
             }
+        player.updateInventory()
         }
 
         player.world.spawnParticle(
@@ -61,7 +63,4 @@ object MareaRoja : Climate {
             10.0, 5.0, 5.0,
             0.0, false, true
         )
-
-        player.updateInventory()
-    }
 } }
