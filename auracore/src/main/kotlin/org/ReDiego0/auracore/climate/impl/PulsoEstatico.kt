@@ -41,7 +41,7 @@ object PulsoEstatico : Climate{
         player.world.spawnParticle(
             org.bukkit.Particle.ELECTRIC_SPARK,
             player.location,
-            2,
+            15,
             0.5, 0.5, 0.5,
             0.0, null, true)
 

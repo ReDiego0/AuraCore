@@ -39,7 +39,7 @@ object ResonanciaArmonica : Climate {
         player.world.spawnParticle(
             Particle.GLOW,
             player.location,
-            10,
+            15,
             0.5, 0.5, 0.5,
             0.0, null, true
         )

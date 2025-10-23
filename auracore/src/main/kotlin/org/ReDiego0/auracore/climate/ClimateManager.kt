@@ -33,6 +33,9 @@ class ClimateManager(private val plugin: Auracore) : Listener {
 
     private val activeBossBars: MutableMap<UUID, BossBar> = mutableMapOf()
     
+    private var climateStartTime: Long = 0L
+    private var climateDurationTicks: Long = 0L
+    
     init {
         plugin.server.pluginManager.registerEvents(this, plugin)
     }
@@ -52,6 +55,9 @@ class ClimateManager(private val plugin: Auracore) : Listener {
     private fun pickNewClimate() {
         val newClimate = allClimates.random()
         activeClimate = newClimate
+        
+        climateStartTime = System.currentTimeMillis()
+        climateDurationTicks = plugin.config.getLong("climate.changeInterval", 350L)
 
         if (newClimate.type == ClimateType.HOSTILE) {
             Bukkit.broadcastMessage("§c[DEBUG] El Aura se ha vuelto inestable. Se detecta: §l${newClimate.name}§c.")
@@ -71,6 +77,17 @@ class ClimateManager(private val plugin: Auracore) : Listener {
         val townyAPI = TownyAPI.getInstance()
         val isClimateHostile = activeClimate.type == ClimateType.HOSTILE
 
+        // Calcular el progreso del clima (de 1.0 a 0.0)
+        val currentTime = System.currentTimeMillis()
+        val elapsedTime = currentTime - climateStartTime
+        val totalDuration = climateDurationTicks * 50L // Convertir ticks a milisegundos
+        val progress = if (totalDuration > 0) {
+            1.0 - (elapsedTime.toDouble() / totalDuration.toDouble())
+        } else {
+            1.0
+        }
+        val clampedProgress = progress.coerceIn(0.0, 1.0)
+
         for (player in plugin.server.onlinePlayers) {
             val townBlock = try {
                 townyAPI.getTownBlock(player.location)
@@ -89,13 +106,15 @@ class ClimateManager(private val plugin: Auracore) : Listener {
             val currentBar = activeBossBars[playerUUID]
 
             if (shouldBeAffected) {
-                val barTitle = "&c[PELIGRO] &l${activeClimate.name}]"
+                val barTitle = "§c[PELIGRO] §l${activeClimate.name}"
                 if (currentBar == null) {
                     val newBar = Bukkit.createBossBar(barTitle, BarColor.RED, BarStyle.SOLID)
+                    newBar.progress = clampedProgress
                     newBar.addPlayer(player)
                     activeBossBars[playerUUID] = newBar
                 } else {
                     currentBar.setTitle(barTitle)
+                    currentBar.progress = clampedProgress
                     if (!currentBar.players.contains(player)) {
                         currentBar.addPlayer(player)
                     }
