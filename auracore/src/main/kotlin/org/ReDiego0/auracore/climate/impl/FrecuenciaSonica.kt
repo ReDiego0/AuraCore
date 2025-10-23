@@ -21,10 +21,10 @@ object FrecuenciaSonica : Climate {
     }
 
     override fun applyEffects(player: Player) {
-        val globalDuration = Random.nextInt(20, 60)
+        val nauseaDuration = Random.nextInt(100, 201)
         val hunger = PotionEffect(
             PotionEffectType.HUNGER,
-            globalDuration,
+            duration,
             0,
             true,
             true,
@@ -33,14 +33,14 @@ object FrecuenciaSonica : Climate {
 
         val nausea = PotionEffect(
             PotionEffectType.NAUSEA,
-            globalDuration,
+            nauseaDuration,
             0,
             true,
             true,
             true,
         )
 
-        if (Random.nextDouble() < 0.15) {
+        if (Random.nextDouble() < 0.03) {
             player.playSound(player.location,
                 Sound.ENTITY_ENDERMAN_STARE,
                 1.0f, 1.0f)
