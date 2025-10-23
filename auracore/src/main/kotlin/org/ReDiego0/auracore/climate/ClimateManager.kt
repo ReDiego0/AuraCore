@@ -75,7 +75,6 @@ class ClimateManager(private val plugin: Auracore) : Listener {
 
     private fun applyClimateEffectsToPlayers() {
         val townyAPI = TownyAPI.getInstance()
-        val isClimateHostile = activeClimate.type == ClimateType.HOSTILE
 
         // Calcular el progreso del clima (de 1.0 a 0.0)
         val currentTime = System.currentTimeMillis()
@@ -96,7 +95,13 @@ class ClimateManager(private val plugin: Auracore) : Listener {
             }
 
             val isInWilderness = (townBlock == null)
-            val shouldBeAffected = isInWilderness && isClimateHostile
+            
+            // Aplicar efectos según el tipo de clima
+            val shouldBeAffected = when (activeClimate.type) {
+                ClimateType.HOSTILE -> isInWilderness // Solo en wilderness
+                ClimateType.BENEFICIAL -> isInWilderness // También en wilderness (o cambia a true para aplicar en todas partes)
+                ClimateType.NEUTRAL -> false // No aplica efectos
+            }
 
             if (shouldBeAffected) {
                 activeClimate.applyEffects(player)
@@ -105,15 +110,22 @@ class ClimateManager(private val plugin: Auracore) : Listener {
             val playerUUID = player.uniqueId
             val currentBar = activeBossBars[playerUUID]
 
-            if (shouldBeAffected) {
-                val barTitle = "§c[PELIGRO] §l${activeClimate.name}"
+            // Mostrar barra según el tipo de clima
+            if (shouldBeAffected && activeClimate.type != ClimateType.NEUTRAL) {
+                val (barTitle, barColor) = when (activeClimate.type) {
+                    ClimateType.HOSTILE -> "§c[PELIGRO] §l${activeClimate.name}" to BarColor.RED
+                    ClimateType.BENEFICIAL -> "§a[BENEFICIO] §l${activeClimate.name}" to BarColor.GREEN
+                    else -> "" to BarColor.WHITE
+                }
+                
                 if (currentBar == null) {
-                    val newBar = Bukkit.createBossBar(barTitle, BarColor.RED, BarStyle.SOLID)
+                    val newBar = Bukkit.createBossBar(barTitle, barColor, BarStyle.SOLID)
                     newBar.progress = clampedProgress
                     newBar.addPlayer(player)
                     activeBossBars[playerUUID] = newBar
                 } else {
                     currentBar.setTitle(barTitle)
+                    currentBar.color = barColor
                     currentBar.progress = clampedProgress
                     if (!currentBar.players.contains(player)) {
                         currentBar.addPlayer(player)
