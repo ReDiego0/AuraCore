@@ -54,14 +54,12 @@ object MareaRoja : Climate {
             }
         }
 
-        val dustOptions = Particle.DustOptions(Color.RED, 1.0f)
-
         player.world.spawnParticle(
-            Particle.FALLING_DUST,
+            Particle.CRIMSON_SPORE,
             player.location,
             300,
             10.0, 5.0, 5.0,
-            0.0, dustOptions, true
+            0.0, false, true
         )
 
         player.updateInventory()
