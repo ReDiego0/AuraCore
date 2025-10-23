@@ -2,8 +2,12 @@ package org.ReDiego0.auracore.climate
 
 import com.palmergames.bukkit.towny.TownyAPI
 import org.ReDiego0.auracore.Auracore
+import org.ReDiego0.auracore.climate.impl.FlujoVital
+import org.ReDiego0.auracore.climate.impl.FrecuenciaSonica
 import org.ReDiego0.auracore.climate.impl.MareaRoja
 import org.ReDiego0.auracore.climate.impl.PazAtmosferica
+import org.ReDiego0.auracore.climate.impl.PulsoEstatico
+import org.ReDiego0.auracore.climate.impl.ResonanciaArmonica
 import org.ReDiego0.auracore.climate.impl.TormentaGeomagnetica
 import org.bukkit.Bukkit
 import org.bukkit.boss.BarColor
@@ -18,6 +22,10 @@ class ClimateManager(private val plugin: Auracore) : Listener {
         PazAtmosferica,
         TormentaGeomagnetica,
         MareaRoja,
+        FrecuenciaSonica,
+        FlujoVital,
+        PulsoEstatico,
+        ResonanciaArmonica
     )
 
     var activeClimate: Climate = PazAtmosferica

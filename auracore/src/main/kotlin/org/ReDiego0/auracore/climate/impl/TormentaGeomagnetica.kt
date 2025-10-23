@@ -13,8 +13,7 @@ object TormentaGeomagnetica : Climate {
     override val name: String = "Tormenta Geomagnética"
     override val papiTag: String = "&cTormenta Geomagnética"
     override val type: ClimateType = ClimateType.HOSTILE
-    private const val EFFECT_DURATION = 70
-
+    override val duration: Int = 1000
     override fun applyVisuals(world: World) {
         world.setStorm(true)
         world.isThundering = true
@@ -23,9 +22,11 @@ object TormentaGeomagnetica : Climate {
     override fun applyEffects(player: Player) {
         val fatigue = PotionEffect(
             PotionEffectType.MINING_FATIGUE,
-            EFFECT_DURATION,
+            duration,
             1,
-            true
+            true,
+            true,
+            true,
         )
         player.addPotionEffect(fatigue)
         if (Random.nextDouble() < 0.10) {

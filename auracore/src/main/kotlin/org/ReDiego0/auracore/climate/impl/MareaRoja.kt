@@ -3,14 +3,17 @@ package org.ReDiego0.auracore.climate.impl
 import org.ReDiego0.auracore.climate.Climate
 import org.ReDiego0.auracore.climate.ClimateType
 import org.bukkit.Material
+import org.bukkit.Particle
 import org.bukkit.World
 import org.bukkit.entity.Player
 import org.bukkit.inventory.meta.Damageable
+import org.bukkit.Color
 import kotlin.random.Random
 
 object MareaRoja : Climate {
     override val name: String = "Marea Roja"
     override val papiTag: String = "&cMarea Roja"
+    override val duration: Int = 1000
     override val type: ClimateType = ClimateType.HOSTILE
 
     override fun applyVisuals(world: World) {
@@ -50,6 +53,17 @@ object MareaRoja : Climate {
                 }
             }
         }
+
+        val dustOptions = Particle.DustOptions(Color.RED, 1.0f)
+
+        player.world.spawnParticle(
+            Particle.FALLING_DUST,
+            player.location,
+            300,
+            10.0, 5.0, 5.0,
+            0.0, dustOptions, true
+        )
+
         player.updateInventory()
     }
 } }
