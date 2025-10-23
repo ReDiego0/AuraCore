@@ -10,7 +10,7 @@ object PazAtmosferica : Climate {
     override val name: String = "Paz Atmosférica"
     override val papiTag: String = "&aPaz Atmosférica"
     override val type: ClimateType = ClimateType.NEUTRAL
-    override val duration: Int = 1000
+    override val duration: Int = 120
 
     override fun applyVisuals(world: World) {
         world.setStorm(false)

@@ -9,7 +9,7 @@ object FlujoVital : Climate{
 
     override val name: String = "Flujo Vital"
     override val papiTag: String = "&bFlujo Vital"
-    override val duration: Int = 1000
+    override val duration: Int = 120
     override val type: ClimateType = ClimateType.BENEFICIAL
 
     override fun applyVisuals(world: org.bukkit.World) {

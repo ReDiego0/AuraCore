@@ -12,7 +12,7 @@ object PulsoEstatico : Climate{
     override val name: String = "Pulso Estatico"
     override val papiTag: String = "&bPulso Estatico"
     override val type: ClimateType = ClimateType.HOSTILE
-    override val duration: Int = 1000
+    override val duration: Int = 120
 
     override fun applyVisuals(world: World) {
         world.setStorm(true)
@@ -28,7 +28,7 @@ object PulsoEstatico : Climate{
             true,
         )
 
-        val blindnessDuration = Random.nextInt(20, 60)
+        val blindnessDuration = Random.nextInt(40, 100)
         val blindness = PotionEffect(
             PotionEffectType.BLINDNESS,
             blindnessDuration,

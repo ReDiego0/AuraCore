@@ -13,7 +13,7 @@ import kotlin.random.Random
 object MareaRoja : Climate {
     override val name: String = "Marea Roja"
     override val papiTag: String = "&cMarea Roja"
-    override val duration: Int = 1000
+    override val duration: Int = 120
     override val type: ClimateType = ClimateType.HOSTILE
 
     override fun applyVisuals(world: World) {

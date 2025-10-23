@@ -14,10 +14,10 @@ object FrecuenciaSonica : Climate {
     override val name: String = "Frecuencia Sonica"
     override val papiTag: String = "&bFrecuencia Sonica"
     override val type: ClimateType = ClimateType.HOSTILE
-    override val duration: Int = 1000
+    override val duration: Int = 120
 
     override fun applyVisuals(world: World) {
-        null
+        world.setStorm(false)
     }
 
     override fun applyEffects(player: Player) {

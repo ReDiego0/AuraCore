@@ -13,7 +13,7 @@ object TormentaGeomagnetica : Climate {
     override val name: String = "Tormenta Geomagnética"
     override val papiTag: String = "&cTormenta Geomagnética"
     override val type: ClimateType = ClimateType.HOSTILE
-    override val duration: Int = 1000
+    override val duration: Int = 120
     override fun applyVisuals(world: World) {
         world.setStorm(true)
         world.isThundering = true

@@ -12,7 +12,7 @@ object ResonanciaArmonica : Climate {
     override val name: String = "Resonancia Armonica"
     override val papiTag: String = "&bResonancia Armonica"
     override val type: ClimateType = ClimateType.BENEFICIAL
-    override val duration: Int = 1000
+    override val duration: Int = 120
 
     override fun applyVisuals(world: World) {
         world.setStorm(false)
