@@ -7,7 +7,6 @@ import org.bukkit.Particle
 import org.bukkit.World
 import org.bukkit.entity.Player
 import org.bukkit.inventory.meta.Damageable
-import org.bukkit.Color
 import kotlin.random.Random
 
 object MareaRoja : Climate {
@@ -17,7 +16,7 @@ object MareaRoja : Climate {
     override val type: ClimateType = ClimateType.HOSTILE
 
     override fun applyVisuals(world: World) {
-        world.setStorm(true)
+        world.setStorm(false)
         world.isThundering = false
     }
     override fun applyEffects(player: Player) {
@@ -40,7 +39,6 @@ object MareaRoja : Climate {
             }
         }
         player.inventory.armorContents = armorContents
-
         val mainHand = player.inventory.itemInMainHand
         if (mainHand.type != Material.AIR) {
             val meta = mainHand.itemMeta
@@ -55,11 +53,10 @@ object MareaRoja : Climate {
             }
         player.updateInventory()
         }
-
         player.world.spawnParticle(
             Particle.CRIMSON_SPORE,
             player.location,
-            300,
+            500,
             10.0, 5.0, 5.0,
             0.0, null, true,
         )
