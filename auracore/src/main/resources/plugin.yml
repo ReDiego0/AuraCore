@@ -8,3 +8,9 @@ depend:
 softdepend:
   - Vault
   - PlaceholderAPI
+commands:
+  auracc:
+    description: Gestiona la moneda CC (Cristales de Carga)
+    usage: /<command> [balance|add|take|set|pay]
+    aliases: [cc, cristales]
+    permission: auracore.cc.base

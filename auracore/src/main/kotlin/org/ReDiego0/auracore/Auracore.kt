@@ -2,8 +2,10 @@ package org.ReDiego0.auracore
 
 import com.palmergames.bukkit.towny.TownyAPI
 import org.ReDiego0.auracore.climate.ClimateManager
+import org.ReDiego0.auracore.economy.CurrencyCommands
+import org.ReDiego0.auracore.economy.CurrencyManager
 import org.ReDiego0.auracore.extensions.AuraPAPIExpansion
-import org.ReDiego0.auracore.tax.TaxManager
+import org.ReDiego0.auracore.economy.PlayerListener
 import org.bukkit.plugin.java.JavaPlugin
 
 class Auracore : JavaPlugin() {
@@ -16,7 +18,7 @@ class Auracore : JavaPlugin() {
     lateinit var climateManager: ClimateManager
         private set
 
-    lateinit var taxManager: TaxManager
+    lateinit var currencyManager: CurrencyManager
         private set
 
     lateinit var townyAPI: TownyAPI
@@ -29,14 +31,15 @@ class Auracore : JavaPlugin() {
         climateManager = ClimateManager(this)
         logger.info("ClimateManager inicializado.")
 
-        taxManager = TaxManager(this)
-        logger.info("TaxManager inicializado.")
+        currencyManager = CurrencyManager(this, dataFolder.resolve("balances.yml"))
+        currencyManager.loadBalances()
+        logger.info("CurrencyManager inicializado y balances.yml cargado.")
 
         climateManager.startClimateTimer(
             changeInterval = 36000L
         )
         climateManager.startEffectApplicator(
-            checkInterval = 20L
+            checkInterval = 60L
         )
         logger.info("Temporizadores de clima iniciados.")
 
@@ -47,15 +50,30 @@ class Auracore : JavaPlugin() {
             logger.warning("PlaceholderAPI no se encontró. El scoreboard no mostrará el clima.")
         }
 
+        server.pluginManager.registerEvents(PlayerListener(this), this)
+        server.pluginManager.registerEvents(climateManager, this)
+        logger.info("Listeners registrados.")
+
+        getCommand("auracc")?.setExecutor(CurrencyCommands(this))
+        logger.info("Comandos registrados.")
+
+
         logger.info("AuraCore se ha habilitado correctamente.")
     }
     override fun onDisable() {
         logger.info("Desactivando AuraCore...")
+
         server.scheduler.cancelTasks(this)
-        if (::climateManager.isInitialized) (
-                climateManager.shutdown()
-        )
+
+        if (::climateManager.isInitialized) {
+            climateManager.shutdown()
+        }
+        if (::currencyManager.isInitialized) {
+            currencyManager.saveBalances()
+            logger.info("Saldos de CC guardados.")
+        }
 
         logger.info("AuraCore se ha deshabilitado.")
     }
 }
+
