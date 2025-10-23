@@ -57,7 +57,7 @@ class ClimateManager(private val plugin: Auracore) : Listener {
         activeClimate = newClimate
         
         climateStartTime = System.currentTimeMillis()
-        climateDurationTicks = plugin.config.getLong("climate.changeInterval", 350L)
+        climateDurationTicks = plugin.config.getLong("climate.changeInterval", 36000L)
 
         if (newClimate.type == ClimateType.HOSTILE) {
             Bukkit.broadcastMessage("§c[DEBUG] El Aura se ha vuelto inestable. Se detecta: §l${newClimate.name}§c.")
@@ -79,7 +79,7 @@ class ClimateManager(private val plugin: Auracore) : Listener {
         // Calcular el progreso del clima (de 1.0 a 0.0)
         val currentTime = System.currentTimeMillis()
         val elapsedTime = currentTime - climateStartTime
-        val totalDuration = climateDurationTicks * 50L // Convertir ticks a milisegundos
+        val totalDuration = climateDurationTicks * 50L
         val progress = if (totalDuration > 0) {
             1.0 - (elapsedTime.toDouble() / totalDuration.toDouble())
         } else {
