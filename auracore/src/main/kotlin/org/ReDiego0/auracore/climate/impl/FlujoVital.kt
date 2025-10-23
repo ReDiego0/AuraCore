@@ -21,7 +21,7 @@ object FlujoVital : Climate{
         val regeneration = PotionEffect(
             PotionEffectType.REGENERATION,
             duration,
-            1,
+            0,
             true,
             true,
             true,

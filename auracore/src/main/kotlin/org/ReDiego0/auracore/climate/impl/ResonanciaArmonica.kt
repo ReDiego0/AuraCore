@@ -22,7 +22,7 @@ object ResonanciaArmonica : Climate {
         val haste = PotionEffect(
             PotionEffectType.HASTE,
             duration,
-            2,
+            0,
             false,
             false,
             true,
@@ -30,7 +30,7 @@ object ResonanciaArmonica : Climate {
         val speed = PotionEffect(
             PotionEffectType.SPEED,
             duration,
-            1,
+            0,
             false,
             true,
             true,
