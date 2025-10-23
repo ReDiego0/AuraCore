@@ -57,6 +57,8 @@ class ClimateManager(private val plugin: Auracore) : Listener {
             Bukkit.broadcastMessage("§c[DEBUG] El Aura se ha vuelto inestable. Se detecta: §l${newClimate.name}§c.")
         } else if (newClimate.type == ClimateType.NEUTRAL) {
             Bukkit.broadcastMessage("§a[DEBUG] El Campo de Aura se ha estabilizado. El clima es: §l${newClimate.name}§a.")
+        } else if (newClimate.type == ClimateType.BENEFICIAL) {
+            Bukkit.broadcastMessage("§e[DEBUG] El Campo de Aura se ha vuelto favorable. Se manifiesta: §l${newClimate.name}§e.")
         }
 
         val mainWorld = plugin.server.worlds.firstOrNull()

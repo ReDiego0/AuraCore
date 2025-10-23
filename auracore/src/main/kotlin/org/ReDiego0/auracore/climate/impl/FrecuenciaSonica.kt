@@ -40,7 +40,9 @@ object FrecuenciaSonica : Climate {
         )
 
         if (Random.nextDouble() < 0.15) {
-            player.playSound(player.location, Sound.ENTITY_ENDERMAN_STARE, 1.0f, 1.0f)
+            player.playSound(player.location,
+                Sound.ENTITY_ENDERMAN_STARE,
+                1.0f, 1.0f)
         }
 
         player.world.spawnParticle(
