@@ -61,6 +61,6 @@ object MareaRoja : Climate {
             player.location,
             300,
             10.0, 5.0, 5.0,
-            0.0,
+            0.0, null, true,
         )
 } }

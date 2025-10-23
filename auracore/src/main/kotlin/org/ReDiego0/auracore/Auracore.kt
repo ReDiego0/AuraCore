@@ -36,7 +36,7 @@ class Auracore : JavaPlugin() {
             changeInterval = 350L // 15 segundos || DEBUG
         )
         climateManager.startEffectApplicator(
-            checkInterval = 60L
+            checkInterval = 20L
         )
         logger.info("Temporizadores de clima iniciados.")
 

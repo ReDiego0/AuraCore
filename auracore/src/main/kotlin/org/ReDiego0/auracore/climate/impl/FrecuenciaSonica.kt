@@ -48,7 +48,7 @@ object FrecuenciaSonica : Climate {
         player.world.spawnParticle(
             Particle.NOTE,
             player.location,
-            1,
+            2,
             0.5, 0.5, 0.5,
             0.0, null, true
         )

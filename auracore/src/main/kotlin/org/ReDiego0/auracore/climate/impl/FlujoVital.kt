@@ -30,7 +30,7 @@ object FlujoVital : Climate{
         player.world.spawnParticle(
             org.bukkit.Particle.HEART,
             player.location,
-            3,
+            6,
             0.5, 0.5, 0.5,
             0.0, null, true
         )
