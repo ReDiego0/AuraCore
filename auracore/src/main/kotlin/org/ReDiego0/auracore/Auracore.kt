@@ -52,7 +52,7 @@ class Auracore : JavaPlugin() {
         )
         logger.info("Temporizadores de clima iniciados.")
 
-        taxManager.startTaxTimer(600L) // 30 segundos | DEBUG
+        taxManager.startTaxTimer(1728000L)
         logger.info("Temporizador de impuestos de cc iniciado.")
 
         if (server.pluginManager.isPluginEnabled("PlaceholderAPI")) {
