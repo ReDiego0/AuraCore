@@ -16,7 +16,6 @@
         <kotlin.version>2.3.0-Beta1</kotlin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
     <build>
         <defaultGoal>clean package</defaultGoal>
         <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
@@ -59,60 +58,44 @@
             </resource>
         </resources>
     </build>
-
-    <!-- Repositorios: Dónde Maven busca las APIs -->
     <repositories>
-        <!-- 1. Repositorio de PaperMC (para la API del servidor 1.21) -->
         <repository>
             <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
-        <!-- 2. Repositorio de PlaceholderAPI -->
         <repository>
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
-        <!-- 4. Repositorio de Vault (Jitpack) -->
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
     </repositories>
-
-    <!-- Dependencias: Las APIs que necesitas -->
     <dependencies>
-        <!-- 1. Paper API (Paper 1.21) -->
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
             <version>1.21-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- 2. Kotlin Standard Library -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
-
-        <!-- 3. Towny API (La versión que estás usando) -->
         <dependency>
             <groupId>com.github.TownyAdvanced</groupId>
             <artifactId>towny</artifactId>
             <version>0.101.2.0</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- 4. PlaceholderAPI -->
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
             <version>2.11.6</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- 5. Vault API -->
         <dependency>
             <groupId>com.github.MilkBowl</groupId>
             <artifactId>VaultAPI</artifactId>
