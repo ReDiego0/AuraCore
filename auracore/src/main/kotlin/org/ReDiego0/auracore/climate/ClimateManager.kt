@@ -16,6 +16,7 @@ import org.bukkit.boss.BossBar
 import org.bukkit.event.EventHandler
 import java.util.UUID
 import org.bukkit.event.Listener
+import org.ReDiego0.auracore.tax.TownData
 
 class ClimateManager(private val plugin: Auracore) : Listener {
     private val allClimates: List<Climate> = listOf(
@@ -32,6 +33,8 @@ class ClimateManager(private val plugin: Auracore) : Listener {
         private set
 
     private val activeBossBars: MutableMap<UUID, BossBar> = mutableMapOf()
+
+    private val townData = TownData(plugin)
     
     private var climateStartTime: Long = 0L
     private var climateDurationTicks: Long = 0L
@@ -95,12 +98,24 @@ class ClimateManager(private val plugin: Auracore) : Listener {
             }
 
             val isInWilderness = (townBlock == null)
-            
-            // Aplicar efectos según el tipo de clima
+            var isInCollapsedTown = false
+
+            if (!isInWilderness) {
+                try {
+                    if (townBlock!!.hasTown()) {
+                        val town = townBlock.town
+                        if (townData.hasAuraCollapsed(town)) {
+                            isInCollapsedTown = true
+                        }
+                    }
+                } catch (e: Exception) {
+                }
+            }
+
             val shouldBeAffected = when (activeClimate.type) {
-                ClimateType.HOSTILE -> isInWilderness // Solo en wilderness
-                ClimateType.BENEFICIAL -> isInWilderness // También en wilderness (o cambia a true para aplicar en todas partes)
-                ClimateType.NEUTRAL -> false // No aplica efectos
+                ClimateType.HOSTILE -> isInWilderness || isInCollapsedTown
+                ClimateType.BENEFICIAL -> isInWilderness || isInCollapsedTown
+                ClimateType.NEUTRAL -> false
             }
 
             if (shouldBeAffected) {
