@@ -6,6 +6,8 @@ import org.ReDiego0.auracore.economy.CurrencyCommands
 import org.ReDiego0.auracore.economy.CurrencyManager
 import org.ReDiego0.auracore.extensions.AuraPAPIExpansion
 import org.ReDiego0.auracore.economy.PlayerListener
+import org.ReDiego0.auracore.tax.TaxManager
+import org.ReDiego0.auracore.tax.TaxListener
 import org.bukkit.plugin.java.JavaPlugin
 
 class Auracore : JavaPlugin() {
@@ -19,6 +21,9 @@ class Auracore : JavaPlugin() {
         private set
 
     lateinit var currencyManager: CurrencyManager
+        private set
+
+    lateinit var taxManager: TaxManager
         private set
 
     lateinit var townyAPI: TownyAPI
@@ -35,6 +40,9 @@ class Auracore : JavaPlugin() {
         currencyManager.loadBalances()
         logger.info("CurrencyManager inicializado y balances.yml cargado.")
 
+        taxManager = TaxManager(this)
+        logger.info("TaxManager inicializado.")
+
         climateManager.startClimateTimer(
             changeInterval = 36000L
         )
@@ -42,6 +50,9 @@ class Auracore : JavaPlugin() {
             checkInterval = 60L
         )
         logger.info("Temporizadores de clima iniciados.")
+
+        taxManager.startTaxTimer(600L) // 30 segundos | DEBUG
+        logger.info("Temporizador de impuestos de cc iniciado.")
 
         if (server.pluginManager.isPluginEnabled("PlaceholderAPI")) {
             AuraPAPIExpansion(this).register()
@@ -52,6 +63,7 @@ class Auracore : JavaPlugin() {
 
         server.pluginManager.registerEvents(PlayerListener(this), this)
         server.pluginManager.registerEvents(climateManager, this)
+        server.pluginManager.registerEvents(TaxListener(this), this)
         logger.info("Listeners registrados.")
 
         getCommand("auracc")?.setExecutor(CurrencyCommands(this))
