@@ -34,10 +34,11 @@ class TownData(private val plugin: Auracore) {
     }
 
     fun setAllProtections(town: Town, enabled: Boolean) {
-        town.permissions.pvp = enabled
-        town.permissions.fire = enabled
-        town.permissions.explosion = enabled
-        town.permissions.mobs = enabled
+        val townPerms = town.permissions
+        townPerms.pvp = enabled
+        townPerms.fire = enabled
+        townPerms.explosion = enabled
+        townPerms.mobs = enabled
 
         town.townBlocks.forEach { townBlock ->
             val plotPerms = townBlock.permissions
@@ -46,11 +47,10 @@ class TownData(private val plugin: Auracore) {
             plotPerms.explosion = enabled
             plotPerms.mobs = enabled
 
-            val permstring = plotPerms.toString()
-            townBlock.setPermissions(permstring)
+            val permString = plotPerms.toString()
+            townBlock.setPermissions(permString)
             townBlock.save()
         }
         town.save()
-
     }
 }

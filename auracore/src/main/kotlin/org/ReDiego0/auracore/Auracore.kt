@@ -6,6 +6,7 @@ import org.ReDiego0.auracore.economy.CurrencyCommands
 import org.ReDiego0.auracore.economy.CurrencyManager
 import org.ReDiego0.auracore.extensions.AuraPAPIExpansion
 import org.ReDiego0.auracore.economy.PlayerListener
+import org.ReDiego0.auracore.tax.ProtectionListener
 import org.ReDiego0.auracore.tax.TaxManager
 import org.ReDiego0.auracore.tax.TaxListener
 import org.bukkit.plugin.java.JavaPlugin
@@ -64,6 +65,7 @@ class Auracore : JavaPlugin() {
         server.pluginManager.registerEvents(PlayerListener(this), this)
         server.pluginManager.registerEvents(climateManager, this)
         server.pluginManager.registerEvents(TaxListener(this), this)
+        server.pluginManager.registerEvents(ProtectionListener(this), this)
         logger.info("Listeners registrados.")
 
         getCommand("auracc")?.setExecutor(CurrencyCommands(this))
