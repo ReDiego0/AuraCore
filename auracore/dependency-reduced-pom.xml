@@ -56,8 +56,16 @@
       <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
     </repository>
     <repository>
-      <id>jitpack.io</id>
-      <url>https://jitpack.io</url>
+      <id>jitpack</id>
+      <url>https://jitpack.io/</url>
+    </repository>
+    <repository>
+      <id>enginehub</id>
+      <url>https://maven.enginehub.org/repo/</url>
+    </repository>
+    <repository>
+      <id>codemc</id>
+      <url>https://repo.codemc.io/repository/maven-public/</url>
     </repository>
   </repositories>
   <dependencies>
@@ -85,7 +93,42 @@
       <version>1.7</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>com.fastasyncworldedit</groupId>
+      <artifactId>FastAsyncWorldEdit-Core</artifactId>
+      <version>2.13.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.decentsoftware-eu</groupId>
+      <artifactId>decentholograms</artifactId>
+      <version>2.9.7</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fastasyncworldedit</groupId>
+      <artifactId>FastAsyncWorldEdit-Bukkit</artifactId>
+      <version>2.13.1</version>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>FastAsyncWorldEdit-Core</artifactId>
+          <groupId>*</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
   </dependencies>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.intellectualsites.bom</groupId>
+        <artifactId>bom-newest</artifactId>
+        <version>1.55</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <kotlin.version>2.3.0-Beta1</kotlin.version>

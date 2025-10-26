@@ -1,6 +1,8 @@
 package org.ReDiego0.auracore
 
 import com.palmergames.bukkit.towny.TownyAPI
+import org.ReDiego0.auracore.anomaly.AnomalyManager
+import org.ReDiego0.auracore.anomaly.AnomalyCommands
 import org.ReDiego0.auracore.climate.ClimateManager
 import org.ReDiego0.auracore.economy.CurrencyCommands
 import org.ReDiego0.auracore.economy.CurrencyManager
@@ -22,6 +24,9 @@ class Auracore : JavaPlugin() {
         private set
 
     lateinit var currencyManager: CurrencyManager
+        private set
+
+    lateinit var anomalyManager: AnomalyManager
         private set
 
     lateinit var taxManager: TaxManager
@@ -69,6 +74,7 @@ class Auracore : JavaPlugin() {
         logger.info("Listeners registrados.")
 
         getCommand("auracc")?.setExecutor(CurrencyCommands(this))
+        getCommand("auracore")?.setExecutor(AnomalyCommands(this))
         logger.info("Comandos registrados.")
 
 

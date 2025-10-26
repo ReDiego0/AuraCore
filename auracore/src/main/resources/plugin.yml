@@ -5,6 +5,8 @@ api-version: '1.21'
 author: ReDiego0
 depend:
   - Towny
+  - FastAsyncWorldEdit
+  - DecentHolograms
 softdepend:
   - Vault
   - PlaceholderAPI
@@ -13,4 +15,9 @@ commands:
     description: Gestiona la moneda CC (Cristales de Carga)
     usage: /<command> [balance|add|take|set|pay]
     aliases: [cc, cristales]
-    permission: auracore.cc.base
+    permission: auracore.cc
+  auracore:
+    description: Comando de administración de AuraCore
+    usage: /<command> anomalia [place|remove]
+    aliases: [ac]
+    permission: auracore.admin
