@@ -28,3 +28,15 @@ AuraCore es el plugin central que gestiona las mecánicas únicas del servidor, 
         * Permite que los jugadores externos (*Outsiders*) puedan construir, destruir, interactuar con bloques (Switch) y usar ítems dentro de la ciudad colapsada, eliminando las protecciones territoriales estándar.
     * **Bloqueo de Comandos:** Impide que los alcaldes o asistentes de ciudades colapsadas puedan usar comandos (`/t toggle ...`, `/plot toggle ...`) para desactivar manualmente las consecuencias (PvP, Mobs, Fuego, Explosiones).
     * El estado de colapso y las consecuencias solo se revierten cuando el líder paga el impuesto en el siguiente ciclo de cobro.
+* **Sistema de Anomalías del Campo:**
+    * Introduce "Anomalías" como eventos localizados y temporales que sirven como fuente secundaria y riesgosa de Cristales de Carga (CC), incentivando la exploración de los Territorios sin Autoridad (*wilderness*).
+    * Permite a los administradores colocar anomalías mediante un comando (`/auracore anomalia place <nombreSchematic>`).
+    * Cada anomalía consiste en una estructura física predefinida (cargada desde un archivo `.schem` vía WorldEdit/FAWE) y un holograma interactivo (gestionado por DecentHolograms) ubicado en un punto específico dentro de la estructura (definido por un bloque marcador en el schematic).
+    * Los jugadores que pertenezcan a una ciudad pueden interactuar (haciendo clic) con el holograma de la anomalía.
+    * Al interactuar exitosamente:
+        * Se otorga una cantidad aleatoria de CC (rango configurable, con baja probabilidad de obtener una bonificación mayor) directamente al saldo del Alcalde de la ciudad del jugador.
+        * Se envían mensajes de notificación al jugador y al Alcalde (si está conectado).
+        * La anomalía (holograma y registro en `anomalies.yml`) se elimina permanentemente.
+    * Los jugadores sin ciudad no pueden reclamar las anomalías.
+    * Incluye comandos de administración para listar (`/auracore anomalia list`) y eliminar (`/auracore anomalia remove <ID>`) anomalías activas.
+    * Requiere WorldEdit (o FAWE) y DecentHolograms como dependencias.
