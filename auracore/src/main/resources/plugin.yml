@@ -21,3 +21,8 @@ commands:
     usage: /<command> anomalia [place|remove]
     aliases: [ac]
     permission: auracore.admin
+  gcc:
+    description: Gestion de Generadores de CC
+    usage: /<command> [place|remove|list]
+    aliases: [gcc]
+    permission: auracore.admin

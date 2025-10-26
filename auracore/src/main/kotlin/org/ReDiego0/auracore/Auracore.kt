@@ -9,6 +9,9 @@ import org.ReDiego0.auracore.economy.CurrencyCommands
 import org.ReDiego0.auracore.economy.CurrencyManager
 import org.ReDiego0.auracore.extensions.AuraPAPIExpansion
 import org.ReDiego0.auracore.economy.PlayerListener
+import org.ReDiego0.auracore.generator.GeneratorManager
+import org.ReDiego0.auracore.generator.GeneratorProtectionListener
+import org.ReDiego0.auracore.generator.GeneratorCommands
 import org.ReDiego0.auracore.tax.ProtectionListener
 import org.ReDiego0.auracore.tax.TaxManager
 import org.ReDiego0.auracore.tax.TaxListener
@@ -33,6 +36,9 @@ class Auracore : JavaPlugin() {
     lateinit var anomalyManager: AnomalyManager
         private set
 
+    lateinit var generatorManager: GeneratorManager
+        private set
+
     lateinit var townyAPI: TownyAPI
         private set
 
@@ -53,6 +59,10 @@ class Auracore : JavaPlugin() {
         anomalyManager = AnomalyManager(this)
         anomalyManager.loadAnomalies()
         logger.info("AnomalyManager inicializado.")
+
+        generatorManager = GeneratorManager(this)
+        generatorManager.loadGenerators()
+        logger.info("GeneratorManager inicializado.")
 
         climateManager.startClimateTimer(
             changeInterval = 36000L
@@ -77,10 +87,12 @@ class Auracore : JavaPlugin() {
         server.pluginManager.registerEvents(TaxListener(this), this)
         server.pluginManager.registerEvents(ProtectionListener(this), this)
         server.pluginManager.registerEvents(AnomalyInteractionListener(this), this)
+        server.pluginManager.registerEvents(GeneratorProtectionListener(this), this)
         logger.info("Listeners registrados.")
 
         getCommand("auracc")?.setExecutor(CurrencyCommands(this))
         getCommand("auracore")?.setExecutor(AnomalyCommands(this))
+        getCommand("gcc")?.setExecutor(GeneratorCommands(this))
         logger.info("Comandos registrados.")
 
 
@@ -97,6 +109,11 @@ class Auracore : JavaPlugin() {
         if (::currencyManager.isInitialized) {
             currencyManager.saveBalances()
             logger.info("Saldos de CC guardados.")
+        }
+
+        if (::generatorManager.isInitialized) {
+            generatorManager.saveGenerators()
+            logger.info("Generadores guardados.")
         }
 
         logger.info("AuraCore se ha deshabilitado.")
