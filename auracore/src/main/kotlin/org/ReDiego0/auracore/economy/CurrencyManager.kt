@@ -24,10 +24,11 @@ class CurrencyManager(private val plugin: Auracore, private val balancesFile: Fi
         balancesConfig.set(uuid.toString(), finalAmount)
     }
 
-    fun addBalance(uuid: UUID, amount: Double) {
-        if (amount <= 0) return
+    fun addBalance(uuid: UUID, amount: Double) : Boolean {
+        if (amount <= 0) return false
         val currentBalance = getBalance(uuid)
         setBalance(uuid, currentBalance + amount)
+        return true
     }
 
     fun removeBalance(uuid: UUID, amount: Double): Boolean {

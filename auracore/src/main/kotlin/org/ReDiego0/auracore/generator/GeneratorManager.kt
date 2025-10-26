@@ -97,7 +97,7 @@ class GeneratorManager(private val plugin: Auracore) {
     fun addGenerator(location: Location): GeneratorData? {
         val id = UUID.randomUUID()
         val hologramName = "generator_${id.toString().substring(0, 8)}"
-        val data = GeneratorData(id, location.block.location, 0L, hologramName)
+        val data = GeneratorData(id, location.block.location, System.currentTimeMillis(), hologramName)
 
         activeGenerators[id] = data
         saveGenerators()
@@ -131,7 +131,7 @@ class GeneratorManager(private val plugin: Auracore) {
     }
 
     private fun startGenerationTimer() {
-        val checkIntervalTicks = 20L * 60L * 5L
+        val checkIntervalTicks = 100L
 
         object : BukkitRunnable() {
             override fun run() {
@@ -141,7 +141,7 @@ class GeneratorManager(private val plugin: Auracore) {
     }
 
     private fun startHologramUpdateTimer() {
-        val updateIntervalTicks = 20L * 30L
+        val updateIntervalTicks = 100L
 
         object : BukkitRunnable() {
             override fun run() {
@@ -155,33 +155,41 @@ class GeneratorManager(private val plugin: Auracore) {
         val townyAPI = TownyAPI.getInstance()
 
         activeGenerators.values.forEach { data ->
-            if (currentTime - data.lastGenerationTime >= GENERATION_INTERVAL_MS) {
 
-                Bukkit.getScheduler().runTask(plugin, Runnable {
+            Bukkit.getScheduler().runTask(plugin, Runnable {
+
+                if (currentTime - data.lastGenerationTime >= GENERATION_INTERVAL_MS) {
+
                     val location = data.location
-                    val townBlock = townyAPI.getTownBlock(location)
+                    var townBlock = try { townyAPI.getTownBlock(location) } catch (e: Exception) { null }
 
                     if (townBlock != null && townBlock.hasTown()) {
                         try {
                             val town = townBlock.town
                             if (town.hasMayor()) {
                                 val mayor = town.mayor
-                                currencyManager.addBalance(mayor.uuid, GENERATION_AMOUNT)
-                                data.lastGenerationTime = currentTime
-                                saveGenerators()
+                                val success = currencyManager.addBalance(mayor.uuid, GENERATION_AMOUNT)
 
-                                mayor.player?.sendMessage("$prefix${ChatColor.GREEN}Has recibido ${GENERATION_AMOUNT} CC del generador en (${location.blockX}, ${location.blockY}, ${location.blockZ}).")
-                                TownyMessaging.sendPrefixedTownMessage(town, "$prefix${ChatColor.AQUA}El generador en (${location.blockX}, ${location.blockY}, ${location.blockZ}) ha producido ${GENERATION_AMOUNT} CC para el alcalde.")
+                                if (success) {
+                                    data.lastGenerationTime = currentTime
+                                    saveGenerators()
 
-                                createOrUpdateHologram(data)
+                                    mayor.player?.sendMessage("$prefix${ChatColor.GREEN}Has recibido ${GENERATION_AMOUNT} CC del generador en (${location.blockX}, ${location.blockY}, ${location.blockZ}).")
+                                    TownyMessaging.sendPrefixedTownMessage(town, "$prefix${ChatColor.AQUA}El generador en (${location.blockX}, ${location.blockY}, ${location.blockZ}) ha producido ${GENERATION_AMOUNT} CC para el alcalde.")
 
+                                    createOrUpdateHologram(data)
+                                } else {
+                                    plugin.logger.warning("Error al depositar CC al alcalde ${mayor.name} para el generador ${data.id}")
+                                }
                             }
                         } catch (e: Exception) {
                             plugin.logger.warning("Error procesando generación para ${data.id}: ${e.message}")
                         }
+                    } else {
                     }
-                })
-            }
+                }
+
+            })
         }
     }
 
@@ -202,13 +210,21 @@ class GeneratorManager(private val plugin: Auracore) {
         } catch (e: Exception) { "${ChatColor.GRAY}Nadie" }
 
         val nextGenerationTime = data.lastGenerationTime + GENERATION_INTERVAL_MS
+
         val remainingMillis = nextGenerationTime - System.currentTimeMillis()
         val timeString = if (remainingMillis <= 0) {
             "${ChatColor.GREEN}¡Listo!"
         } else {
-            val hours = TimeUnit.MILLISECONDS.toHours(remainingMillis)
-            val minutes = TimeUnit.MILLISECONDS.toMinutes(remainingMillis) % 60
-            "${ChatColor.YELLOW}${hours}h ${minutes}m"
+            val totalSeconds = TimeUnit.MILLISECONDS.toSeconds(remainingMillis)
+            val hours = totalSeconds / 3600
+            val minutes = (totalSeconds % 3600) / 60
+            val seconds = totalSeconds % 60
+            buildString {
+                append(ChatColor.YELLOW)
+                if (hours > 0) append("${hours}h ")
+                if (hours > 0 || minutes > 0) append("${minutes}m ")
+                append("${seconds}s")
+            }
         }
 
         val hologramName = data.hologramName ?: return
