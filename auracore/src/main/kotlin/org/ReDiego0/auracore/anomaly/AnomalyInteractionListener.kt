@@ -1,4 +1,4 @@
-package org.ReDiego0.auracore.anomaly // O org.ReDiego0.auracore.listeners
+package org.ReDiego0.auracore.anomaly
 
 import com.palmergames.bukkit.towny.TownyAPI
 import eu.decentsoftware.holograms.event.HologramClickEvent

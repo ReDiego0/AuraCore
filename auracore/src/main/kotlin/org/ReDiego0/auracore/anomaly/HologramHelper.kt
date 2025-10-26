@@ -1,4 +1,4 @@
-package org.ReDiego0.auracore.anomaly // O org.ReDiego0.auracore.helpers
+package org.ReDiego0.auracore.anomaly
 
 import eu.decentsoftware.holograms.api.DHAPI
 import eu.decentsoftware.holograms.api.holograms.Hologram

@@ -1,4 +1,4 @@
-package org.ReDiego0.auracore.anomaly // O org.ReDiego0.auracore.helpers
+package org.ReDiego0.auracore.anomaly
 
 import com.sk89q.worldedit.EditSession
 import com.sk89q.worldedit.WorldEdit
