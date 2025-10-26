@@ -3,6 +3,7 @@ package org.ReDiego0.auracore
 import com.palmergames.bukkit.towny.TownyAPI
 import org.ReDiego0.auracore.anomaly.AnomalyManager
 import org.ReDiego0.auracore.anomaly.AnomalyCommands
+import org.ReDiego0.auracore.anomaly.AnomalyInteractionListener
 import org.ReDiego0.auracore.climate.ClimateManager
 import org.ReDiego0.auracore.economy.CurrencyCommands
 import org.ReDiego0.auracore.economy.CurrencyManager
@@ -26,10 +27,10 @@ class Auracore : JavaPlugin() {
     lateinit var currencyManager: CurrencyManager
         private set
 
-    lateinit var anomalyManager: AnomalyManager
+    lateinit var taxManager: TaxManager
         private set
 
-    lateinit var taxManager: TaxManager
+    lateinit var anomalyManager: AnomalyManager
         private set
 
     lateinit var townyAPI: TownyAPI
@@ -48,6 +49,10 @@ class Auracore : JavaPlugin() {
 
         taxManager = TaxManager(this)
         logger.info("TaxManager inicializado.")
+
+        anomalyManager = AnomalyManager(this)
+        anomalyManager.loadAnomalies()
+        logger.info("AnomalyManager inicializado.")
 
         climateManager.startClimateTimer(
             changeInterval = 36000L
@@ -71,6 +76,7 @@ class Auracore : JavaPlugin() {
         server.pluginManager.registerEvents(climateManager, this)
         server.pluginManager.registerEvents(TaxListener(this), this)
         server.pluginManager.registerEvents(ProtectionListener(this), this)
+        server.pluginManager.registerEvents(AnomalyInteractionListener(this), this)
         logger.info("Listeners registrados.")
 
         getCommand("auracc")?.setExecutor(CurrencyCommands(this))
