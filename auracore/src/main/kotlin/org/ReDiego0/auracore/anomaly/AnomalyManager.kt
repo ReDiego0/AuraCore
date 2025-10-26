@@ -85,7 +85,7 @@ class AnomalyManager(private val plugin: Auracore) {
 
     fun addAnomaly(location: Location, schematicName: String): AnomalyData? {
         val id = UUID.randomUUID()
-        val hologramName = "anomaly_${id.toString().substring(0, 8)}"
+        val hologramName = "anomaly_${id.toString()}"
         val data = AnomalyData(id, location, schematicName, hologramName)
 
         activeAnomalies[id] = data

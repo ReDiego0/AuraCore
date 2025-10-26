@@ -22,7 +22,7 @@ import java.io.FileInputStream
 object WorldEditHelper {
 
     fun pasteSchematic(plugin: Auracore, schematicName: String, location: Location, callback: (Boolean, Location?) -> Unit) {
-        val schematicFile = File(plugin.dataFolder.parentFile, "WorldEdit/schematics/$schematicName.schem")
+        val schematicFile = File(plugin.dataFolder.parentFile, "FastAsyncWorldEdit/schematics/$schematicName.schem")
 
         if (!schematicFile.exists()) {
             plugin.logger.warning("Schematic no encontrado: ${schematicFile.path}")

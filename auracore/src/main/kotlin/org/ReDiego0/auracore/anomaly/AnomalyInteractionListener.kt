@@ -58,8 +58,8 @@ class AnomalyInteractionListener(private val plugin: Auracore) : Listener {
 
         val randomValue = Random.nextDouble()
         val amount = when {
-            randomValue < 0.02 -> 300.0 // 2% de probabilidad para 300
-            else -> Random.nextDouble(30.0, 120.1) // Resto para 30-120
+            randomValue < 0.02 -> 300.0
+            else -> Random.nextDouble(30.0, 120.1)
         }.toInt().toDouble()
 
         currencyManager.addBalance(mayor.uuid, amount)
