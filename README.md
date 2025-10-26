@@ -1,4 +1,4 @@
-## AuraCore - Sistema Central de Mecánicas
+# AuraCore - Sistema Central de Mecánicas
 
 AuraCore es el plugin central que gestiona las mecánicas únicas del servidor, enfocándose en la geopolítica, la gestión de recursos estratégicos y las consecuencias ambientales.
 
@@ -8,8 +8,8 @@ AuraCore es el plugin central que gestiona las mecánicas únicas del servidor, 
     * Introduce los Cristales de Carga (CC) como una moneda estratégica fundamental para la supervivencia y expansión territorial.
     * Incluye un sistema de gestión de saldos persistente por jugador (`balances.yml`).
     * Proporciona comandos de administración (`/auracc`) para consultar, añadir, establecer y remover saldos de CC.
-    * Permite la transferencia de CC entre jugadores (`/auracc pay`).
-    * Integra el saldo de CC con PlaceholderAPI (`%auracore_cc%`) para visualización en scoreboards u otros plugins.
+    * Permite la transferencia de CC entre líderes de ciudades para fomentar el comercio (`/auracc pay`).
+    * Integra el saldo de CC con [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) (`%auracore_cc%`) para visualización en scoreboards u otros plugins.
 
 * **Sistema Dinámico de Climas Hostiles:**
     * Implementa un ciclo de climas cambiantes que afectan exclusivamente a los territorios no reclamados (*wilderness*).
@@ -17,9 +17,9 @@ AuraCore es el plugin central que gestiona las mecánicas únicas del servidor, 
     * Incluye climas beneficiosos (ej. Resonancia Armónica, Flujo Vital) que otorgan ventajas temporales (Prisa, Velocidad, Regeneración) en la *wilderness*.
     * Modifica el clima visual global de Minecraft (lluvia, tormenta) para reflejar el estado actual del Aura.
     * Muestra el clima activo y su duración restante mediante una BossBar a los jugadores afectados.
-    * Integra el nombre del clima activo con PlaceholderAPI (`%auracore_clima%`).
+    * Integra el nombre del clima activo con [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) (`%auracore_clima%`).
 
-* **Sistema de Impuestos y Colapso del Aura:**
+* **Sistema de Impuestos y Colapso del Aura (Depende de [Towny](https://www.spigotmc.org/resources/towny-advanced.72694/)):**
     * Establece un impuesto periódico en CC para las ciudades, calculado en base a su tamaño (número de *chunks*).
     * El impuesto es cobrado automáticamente al líder (Alcalde) de la ciudad desde su saldo personal de CC.
     * Introduce el estado persistente de "Aura Colapsada" para las ciudades cuyo líder no puede pagar el impuesto.
@@ -28,15 +28,29 @@ AuraCore es el plugin central que gestiona las mecánicas únicas del servidor, 
         * Permite que los jugadores externos (*Outsiders*) puedan construir, destruir, interactuar con bloques (Switch) y usar ítems dentro de la ciudad colapsada, eliminando las protecciones territoriales estándar.
     * **Bloqueo de Comandos:** Impide que los alcaldes o asistentes de ciudades colapsadas puedan usar comandos (`/t toggle ...`, `/plot toggle ...`) para desactivar manualmente las consecuencias (PvP, Mobs, Fuego, Explosiones).
     * El estado de colapso y las consecuencias solo se revierten cuando el líder paga el impuesto en el siguiente ciclo de cobro.
-* **Sistema de Anomalías del Campo:**
+
+* **Sistema de Anomalías del Campo (Depende de [FAWE](https://www.spigotmc.org/resources/fastasyncworldedit.13932/) y [DecentHolograms](https://www.spigotmc.org/resources/decentholograms-1-8-1-21-papi-support-no-dependencies.96927/)):**
     * Introduce "Anomalías" como eventos localizados y temporales que sirven como fuente secundaria y riesgosa de Cristales de Carga (CC), incentivando la exploración de los Territorios sin Autoridad (*wilderness*).
     * Permite a los administradores colocar anomalías mediante un comando (`/auracore anomalia place <nombreSchematic>`).
-    * Cada anomalía consiste en una estructura física predefinida (cargada desde un archivo `.schem` vía WorldEdit/FAWE) y un holograma interactivo (gestionado por DecentHolograms) ubicado en un punto específico dentro de la estructura (definido por un bloque marcador en el schematic).
-    * Los jugadores que pertenezcan a una ciudad pueden interactuar (haciendo clic) con el holograma de la anomalía.
+    * Cada anomalía consiste en una estructura física predefinida (cargada desde un archivo `.schem` vía FAWE) y un holograma interactivo (gestionado por DecentHolograms) ubicado en un punto específico dentro de la estructura (definido por un bloque marcador en el schematic).
+    * Los jugadores que pertenezcan a una ciudad ([Towny](https://www.spigotmc.org/resources/towny-advanced.72694/)) pueden interactuar (haciendo clic) con el holograma de la anomalía.
     * Al interactuar exitosamente:
         * Se otorga una cantidad aleatoria de CC (rango configurable, con baja probabilidad de obtener una bonificación mayor) directamente al saldo del Alcalde de la ciudad del jugador.
         * Se envían mensajes de notificación al jugador y al Alcalde (si está conectado).
         * La anomalía (holograma y registro en `anomalies.yml`) se elimina permanentemente.
     * Los jugadores sin ciudad no pueden reclamar las anomalías.
     * Incluye comandos de administración para listar (`/auracore anomalia list`) y eliminar (`/auracore anomalia remove <ID>`) anomalías activas.
-    * Requiere WorldEdit (o FAWE) y DecentHolograms como dependencias.
+    * Requiere [FAWE](https://www.spigotmc.org/resources/fastasyncworldedit.13932/) y [DecentHolograms](https://www.spigotmc.org/resources/decentholograms-1-8-1-21-papi-support-no-dependencies.96927/) como dependencias.
+
+* **Sistema de Generadores de CC (Depende de [Towny](https://www.spigotmc.org/resources/towny-advanced.72694/) y [DecentHolograms](https://www.spigotmc.org/resources/decentholograms-1-8-1-21-papi-support-no-dependencies.96927/)):**
+    * Introduce "Generadores de Aura" como puntos fijos y estratégicos en el mapa, sirviendo como la fuente primaria y estable de Cristales de Carga (CC).
+    * Permite a los administradores colocar generadores mediante un comando (`/gcc place`) que sitúa un bloque físico específico (ej. Beacon) en la ubicación deseada.
+    * Los bloques generadores son indestructibles por jugadores, explosiones o fuego.
+    * Cada generador crea automáticamente un holograma informativo (gestionado por DecentHolograms) que muestra el estado del generador (controlador actual, tiempo restante para la próxima generación).
+    * De forma periódica (configurable, ej. cada 8 horas), cada generador comprueba qué ciudad ([Towny](https://www.spigotmc.org/resources/towny-advanced.72694/)) controla el *chunk* en el que se encuentra.
+    * Si el *chunk* pertenece a una ciudad con alcalde, se otorga una cantidad fija de CC (configurable, ej. 120 CC) directamente al saldo del Alcalde.
+    * Se envían mensajes de notificación al Alcalde y a la ciudad al generarse el CC.
+    * El holograma se actualiza periódicamente para reflejar el estado actual.
+    * Incluye comandos de administración para listar (`/gcc list`) y eliminar (`/gcc remove`) generadores (elimina tanto el bloque físico como el holograma).
+    * Requiere [DecentHolograms](https://www.spigotmc.org/resources/decentholograms-1-8-1-21-papi-support-no-dependencies.96927/) como dependencia.
+```
