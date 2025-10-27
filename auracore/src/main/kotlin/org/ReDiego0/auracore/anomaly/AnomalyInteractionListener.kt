@@ -10,7 +10,13 @@ import org.bukkit.event.Listener
 import java.util.UUID
 import kotlin.random.Random
 
-class AnomalyInteractionListener(private val plugin: Auracore) : Listener {
+class AnomalyInteractionListener(
+    private val plugin: Auracore,
+    private val minReward: Double,
+    private val maxReward: Double,
+    private val bonusChance: Double,
+    private val bonusAmount: Double
+) : Listener {
 
     private val anomalyManager = plugin.anomalyManager
     private val currencyManager = plugin.currencyManager
@@ -31,7 +37,7 @@ class AnomalyInteractionListener(private val plugin: Auracore) : Listener {
         val anomalyId = try {
             UUID.fromString(anomalyIdString)
         } catch (e: IllegalArgumentException) {
-            plugin.logger.warning("Nombre de holograma inválido detectado: $hologramName")
+            plugin.logger.warning("Nombre de holograma inválido detectado: $hologramName (UUID: $anomalyIdString)")
             return
         }
 
@@ -58,13 +64,19 @@ class AnomalyInteractionListener(private val plugin: Auracore) : Listener {
 
         val randomValue = Random.nextDouble()
         val amount = when {
-            randomValue < 0.02 -> 300.0
-            else -> Random.nextDouble(30.0, 120.1)
-        }.toInt().toDouble()
+            randomValue < bonusChance -> bonusAmount
+            else -> Random.nextDouble(minReward, maxReward + 0.1) // Añadir 0.1 para incluir el maximo
+        }.toInt().toDouble() // Convertir a Int para redondear y luego a Double
 
-        currencyManager.addBalance(mayor.uuid, amount)
+        val success = currencyManager.addBalance(mayor.uuid, amount)
+        if (!success) {
+            plugin.logger.warning("Error al depositar CC al alcalde ${mayor.name} desde la anomalía ${anomalyData.id}")
+            player.sendMessage("$prefix${ChatColor.RED}Hubo un error al canalizar la energía. Contacta a un administrador.")
+            return // No eliminar la anomalía si el pago falló
+        }
 
-        if (amount == 300.0) {
+
+        if (amount == bonusAmount) {
             player.sendMessage("$prefix${ChatColor.GOLD}${ChatColor.BOLD}¡FLUJO MASIVO DETECTADO! ${ChatColor.YELLOW}Has canalizado ${ChatColor.GREEN}${amount} CC ${ChatColor.YELLOW}para tu alcalde, ${mayor.name}!")
             player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 0.5f)
             player.playSound(player.location, Sound.ENTITY_WITHER_SPAWN, 0.5f, 1.5f)

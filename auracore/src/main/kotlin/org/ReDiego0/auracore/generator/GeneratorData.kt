@@ -6,6 +6,6 @@ import java.util.UUID
 data class GeneratorData(
     val id: UUID,
     val location: Location,
-    var lastGenerationTime: Long,
+    var nextGenerationTime: Long,
     var hologramName: String? = null
 )
