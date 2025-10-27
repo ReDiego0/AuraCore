@@ -239,7 +239,7 @@ class GeneratorManager(
         )
 
         if (hologram == null) {
-            val adjustedLocation = location.clone().add(0.5, 1.5, 0.5)
+            val adjustedLocation = location.clone().add(0.5, 2.5, 0.5)
             hologram = DHAPI.createHologram(hologramName, adjustedLocation, false, lines)
             if (hologram != null) {
                 hologram.enable()
