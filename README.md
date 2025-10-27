@@ -53,4 +53,67 @@ AuraCore es el plugin central que gestiona las mecánicas únicas del servidor, 
     * El holograma se actualiza periódicamente para reflejar el estado actual.
     * Incluye comandos de administración para listar (`/gcc list`) y eliminar (`/gcc remove`) generadores (elimina tanto el bloque físico como el holograma).
     * Requiere [DecentHolograms](https://www.spigotmc.org/resources/decentholograms-1-8-1-21-papi-support-no-dependencies.96927/) como dependencia.
+* **Archivo de Configuración:**
+
+```yml
+# ---------------------------------- #
+#    Configuración de AuraCore       #
+# ---------------------------------- #
+
+# Sistema de Reclamo de Chunks (Claim)
+claim:
+  normal:
+    # Costo en Cristales de Carga (CC) por reclamar un chunk normal.
+    cost-cc: 10.0
+    # Costo en Moneda Principal (MP - via Vault) por reclamar un chunk normal.
+    cost-mp: 0.0
+  outpost:
+    # Costo en Cristales de Carga (CC) por reclamar un outpost.
+    cost-cc: 100.0
+    # Costo en Moneda Principal (MP - via Vault) por reclamar un outpost.
+    cost-mp: 5000.0
+
+# Sistema de Generadores de CC
+generator:
+  production:
+    # Cantidad de CC que genera cada ciclo.
+    amount: 120.0
+    # Intervalo de generación en horas.
+    interval-hours: 8
+
+# Sistema de Climas Dinámicos
+climate:
+  # Intervalo en minutos entre cada cambio de clima.
+  change-interval-minutes: 30
+  # Intervalo en segundos para la comprobación de efectos y actualización de BossBar.
+  effect-check-interval-seconds: 3
+
+# Sistema de Impuestos y Colapso del Aura
+tax:
+  # Intervalo en horas entre cada ciclo de cobro de impuestos.
+  interval-hours: 24
+  # Costo base fijo de CC por ciclo de impuestos.
+  base-cost-cc: 10.0
+  # Costo adicional de CC por cada chunk reclamado (después del primero).
+  cost-per-chunk-cc: 2.0
+
+# Sistema de Anomalías del Campo
+anomaly:
+  reward:
+    # Mínimo de CC obtenido al reclamar una anomalía.
+    min-cc: 30.0
+    # Máximo de CC obtenido al reclamar una anomalía (sin bonificación).
+    max-cc: 120.0
+    # Probabilidad (entre 0.0 y 1.0) de obtener la recompensa excepcional. 0.02 = 2%
+    bonus-chance: 0.02
+    # Cantidad de CC de la recompensa excepcional.
+    bonus-amount-cc: 300.0
+
+# ---------------------------------- #
+#      Estado Interno (NO TOCAR)     #
+# ---------------------------------- #
+internal:
+  next-tax-time-millis: 0
+
 ```
+
