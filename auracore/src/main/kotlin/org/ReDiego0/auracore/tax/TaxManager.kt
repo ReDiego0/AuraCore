@@ -29,85 +29,78 @@ class TaxManager(private val plugin: Auracore, private val generatorManager: Gen
         val allTowns = TownyAPI.getInstance().towns
         var townsProcessed = 0
         var townsCollapsed = 0
-        val generatorLocations = generatorManager.getAllGenerators().map { it.location }.toSet()
 
-        fun runTaxCollectionCycle() {
-            plugin.logger.info("Iniciando ciclo de cobro de impuestos de Aura (CC)...")
-            val allTowns = TownyAPI.getInstance().towns
-            var townsProcessed = 0
-            var townsCollapsed = 0
+        val baseCostPerGenerator = plugin.taxBaseCostCC
+        val costPerChunk = plugin.taxCostPerChunkCC
+        val generatorLocations = generatorManager.getAllGenerators().map { it.location.block.location }.toSet()
 
-            val baseCostPerGenerator = plugin.taxBaseCostCC
-            val costPerChunk = plugin.taxCostPerChunkCC
-            val generatorLocations = generatorManager.getAllGenerators().map { it.location.block.location }.toSet()
+        for (town in allTowns) {
+            if (!town.hasMayor()) continue
 
-            for (town in allTowns) {
-                if (!town.hasMayor()) continue
+            val mayor = town.mayor
+            val townBlocksCollection = town.townBlocks
+            val chunks = townBlocksCollection.size
+            if (chunks == 0) continue
 
-                val mayor = town.mayor
-                val townBlocksCollection = town.townBlocks
-                val chunks = townBlocksCollection.size
-                if (chunks == 0) continue
+            var generatorCount = 0
+            val townWorldCoords = townBlocksCollection.map { it.worldCoord }.toSet()
 
-                var generatorCount = 0
-                val townWorldCoords = townBlocksCollection.map { it.worldCoord }.toSet()
-
-                for (genLocation in generatorLocations) {
-                    val genWorldCoord = WorldCoord.parseWorldCoord(genLocation)
-                    if (townWorldCoords.contains(genWorldCoord)) {
-                        generatorCount++
-                    }
-                }
-                val cost = (baseCostPerGenerator * generatorCount) + (chunks - 1) * costPerChunk
-                val finalCost = cost.coerceAtLeast(0.0)
-
-                if (finalCost <= 0) {
-                    townsProcessed++
-                    if (townData.hasAuraCollapsed(town)) {
-                        townData.setAuraCollapsed(town, false)
-                        townData.setAllProtections(town, false)
-                    }
-                    continue
-                }
-
-                if (currencyManager.removeBalance(mayor.uuid, finalCost)) {
-                    townsProcessed++
-                    val mayorPlayer = mayor.player
-                    if (mayorPlayer != null && mayorPlayer.isOnline) {
-                        mayorPlayer.sendMessage("${prefix}${ChatColor.GREEN}Se ha cobrado exitosamente el impuesto de ${finalCost} CC. El Aura de la ciudad es estable.")
-                    }
-                    if (townData.hasAuraCollapsed(town)) {
-                        townData.setAuraCollapsed(town, false)
-                        townData.setAllProtections(town, false)
-                        TownyMessaging.sendPrefixedTownMessage(town, "${prefix}${ChatColor.GREEN}¡El Aura se ha estabilizado! La deuda de ${finalCost} CC ha sido pagada y las protecciones han sido RESTAURADAS.")
-                    }
-                } else {
-                    townsCollapsed++
-                    if (!townData.hasAuraCollapsed(town)) {
-                        townData.setAuraCollapsed(town, true)
-                        townData.setAllProtections(town, true)
-                        val mayorPlayer = mayor.player
-                        if (mayorPlayer != null && mayorPlayer.isOnline) {
-                            mayorPlayer.sendMessage("${prefix}${ChatColor.RED}¡ALERTA! No pudiste pagar el impuesto de ${finalCost} CC. Tu saldo es ${currencyManager.getBalance(mayor.uuid)}.")
-                        }
-                        TownyMessaging.sendPrefixedTownMessage(town, "${prefix}${ChatColor.DARK_GRAY}¡ALERTA! El alcalde no pudo pagar el impuesto de ${finalCost} CC. El Aura ha colapsado. ¡Las protecciones están DESACTIVADAS!")
-                    }
+            for (genLocation in generatorLocations) {
+                val genWorldCoord = WorldCoord.parseWorldCoord(genLocation)
+                if (townWorldCoords.contains(genWorldCoord)) {
+                    generatorCount++
                 }
             }
-            plugin.logger.info("Ciclo de cobro de impuestos de Aura (CC) finalizado. Ciudades procesadas: $townsProcessed. Ciudades colapsadas: $townsCollapsed.")
+            val cost = (baseCostPerGenerator * generatorCount) + (chunks - 1) * costPerChunk
+            val finalCost = cost.coerceAtLeast(0.0)
 
-            val currentTimeMillis = System.currentTimeMillis()
-            val nextTime = currentTimeMillis + (plugin.taxIntervalTicks * 50L)
-            plugin.config.set("internal.next-tax-time-millis", nextTime)
-            plugin.saveConfig()
-            plugin.nextTaxTimeMillis = nextTime
+            if (finalCost <= 0) {
+                townsProcessed++
+                if (townData.hasAuraCollapsed(town)) {
+                    townData.setAuraCollapsed(town, false)
+                    townData.setAllProtections(town, false)
+                }
+                continue
+            }
 
-            plugin.logger.info("Próximo ciclo de impuestos reprogramado para ${plugin.taxIntervalTicks / 20 / 3600} horas.")
-            scheduleNextTaxCycle(plugin.taxIntervalTicks)
+            if (currencyManager.removeBalance(mayor.uuid, finalCost)) {
+                townsProcessed++
+                val mayorPlayer = mayor.player
+                if (mayorPlayer != null && mayorPlayer.isOnline) {
+                    mayorPlayer.sendMessage("${prefix}${ChatColor.GREEN}Se ha cobrado exitosamente el impuesto de ${finalCost} CC. El Aura de la ciudad es estable.")
+                }
+                if (townData.hasAuraCollapsed(town)) {
+                    townData.setAuraCollapsed(town, false)
+                    townData.setAllProtections(town, false)
+                    TownyMessaging.sendPrefixedTownMessage(town, "${prefix}${ChatColor.GREEN}¡El Aura se ha estabilizado! La deuda de ${finalCost} CC ha sido pagada y las protecciones han sido RESTAURADAS.")
+                }
+            } else {
+                townsCollapsed++
+                if (!townData.hasAuraCollapsed(town)) {
+                    townData.setAuraCollapsed(town, true)
+                    townData.setAllProtections(town, true)
+                    val mayorPlayer = mayor.player
+                    if (mayorPlayer != null && mayorPlayer.isOnline) {
+                        mayorPlayer.sendMessage("${prefix}${ChatColor.RED}¡ALERTA! No pudiste pagar el impuesto de ${finalCost} CC. Tu saldo es ${currencyManager.getBalance(mayor.uuid)}.")
+                    }
+                    TownyMessaging.sendPrefixedTownMessage(town, "${prefix}${ChatColor.DARK_GRAY}¡ALERTA! El alcalde no pudo pagar el impuesto de ${finalCost} CC. El Aura ha colapsado. ¡Las protecciones están DESACTIVADAS!")
+                }
+            }
         }
+        plugin.logger.info("Ciclo de cobro de impuestos de Aura (CC) finalizado. Ciudades procesadas: $townsProcessed. Ciudades colapsadas: $townsCollapsed.")
+
+        val currentTimeMillis = System.currentTimeMillis()
+        val nextTime = currentTimeMillis + (plugin.taxIntervalTicks * 50L)
+        plugin.config.set("internal.next-tax-time-millis", nextTime)
+        plugin.saveConfig()
+        plugin.nextTaxTimeMillis = nextTime
+
+        plugin.logger.info("Próximo ciclo de impuestos reprogramado para ${plugin.taxIntervalTicks / 20 / 3600} horas.")
+        scheduleNextTaxCycle(plugin.taxIntervalTicks)
+    }
 
     fun cancelScheduledTask() {
         scheduledTask?.cancel()
         scheduledTask = null
     }
-}}
+}
