@@ -20,12 +20,10 @@ class ClaimCostListener(private val plugin: Auracore) : Listener {
         val player = event.player ?: return
         val town = event.town ?: return
         val townBlock = event.townBlock ?: return
-
-        if (!town.hasMayor()) {
-            player.sendMessage("${prefix}${ChatColor.RED}Tu ciudad necesita un alcalde para poder reclamar territorios.")
-            event.isCancelled = true
+        if (town.numTownBlocks <= 1 || !town.hasMayor()) {
             return
         }
+
         val mayor = town.mayor
 
         val isOutpost = townBlock.isOutpost
