@@ -219,12 +219,10 @@ class GeneratorManager(
             val totalSeconds = TimeUnit.MILLISECONDS.toSeconds(remainingMillis)
             val hours = totalSeconds / 3600
             val minutes = (totalSeconds % 3600) / 60
-            val seconds = totalSeconds % 60
             buildString {
                 append(ChatColor.YELLOW)
                 if (hours > 0) append("${hours}h ")
                 if (hours > 0 || minutes > 0) append("${minutes}m ")
-                append("${seconds}s")
             }
         }
 
