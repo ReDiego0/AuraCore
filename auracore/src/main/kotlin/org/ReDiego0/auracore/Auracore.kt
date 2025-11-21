@@ -79,16 +79,16 @@ class Auracore : JavaPlugin() {
         currencyManager.loadBalances()
         logger.info("CurrencyManager inicializado y balances.yml cargado.")
 
-        taxManager = TaxManager(this)
+        generatorManager = GeneratorManager(this, generatorAmount, generatorIntervalMillis)
+        generatorManager.loadGenerators()
+        logger.info("GeneratorManager inicializado.")
+
+        taxManager = TaxManager(this, generatorManager)
         logger.info("TaxManager inicializado.")
 
         anomalyManager = AnomalyManager(this)
         anomalyManager.loadAnomalies()
         logger.info("AnomalyManager inicializado.")
-
-        generatorManager = GeneratorManager(this, generatorAmount, generatorIntervalMillis)
-        generatorManager.loadGenerators()
-        logger.info("GeneratorManager inicializado.")
 
         climateManager.startClimateTimer(climateChangeIntervalTicks)
         climateManager.startEffectApplicator(climateEffectCheckIntervalTicks)
