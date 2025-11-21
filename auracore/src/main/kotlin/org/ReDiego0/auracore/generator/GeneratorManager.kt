@@ -177,10 +177,10 @@ class GeneratorManager(
 
                     if (success) {
                         generationSuccessful = true // Marcar como exitoso para actualizar la hora
-                        mayor.player?.sendMessage("$prefix${ChatColor.GREEN}Has recibido ${generationAmount} CC del generador en (${location.blockX}, ${location.blockY}, ${location.blockZ}).")
-                        TownyMessaging.sendPrefixedTownMessage(town, "$prefix${ChatColor.AQUA}El generador en (${location.blockX}, ${location.blockY}, ${location.blockZ}) ha producido ${generationAmount} CC para el alcalde.")
+                        mayor.player?.sendMessage("$prefix${ChatColor.GREEN}Has recibido ${generationAmount} ${plugin.currencyShortName} del generador en (${location.blockX}, ${location.blockY}, ${location.blockZ}).")
+                        TownyMessaging.sendPrefixedTownMessage(town, "$prefix${ChatColor.AQUA}El generador en (${location.blockX}, ${location.blockY}, ${location.blockZ}) ha producido ${generationAmount} ${plugin.currencyShortName} para el alcalde.")
                     } else {
-                        plugin.logger.warning("Error al depositar CC al alcalde ${mayor.name} para el generador ${data.id}")
+                        plugin.logger.warning("Error al depositar ${plugin.currencyShortName} al alcalde ${mayor.name} para el generador ${data.id}")
                     }
                 }
             } catch (e: Exception) {

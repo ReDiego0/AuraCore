@@ -106,7 +106,7 @@ class ClimateManager(private val plugin: Auracore) : Listener {
 
             val shouldBeAffected = when (currentClimate.type) {
                 ClimateType.HOSTILE -> isInWilderness || isInCollapsedTown
-                ClimateType.BENEFICIAL -> isInWilderness || isInCollapsedTown // Los buffs también pueden ser solo en wild si quieres
+                ClimateType.BENEFICIAL -> isInWilderness || isInCollapsedTown
                 ClimateType.NEUTRAL -> false
             }
 
@@ -165,5 +165,9 @@ class ClimateManager(private val plugin: Auracore) : Listener {
         activeBossBars.clear()
         activeWorldClimates.clear()
         worldClimateStartTimes.clear()
+    }
+
+    fun getClimateForWorld(worldName: String): Climate? {
+        return activeWorldClimates[worldName]
     }
 }

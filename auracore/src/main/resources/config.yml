@@ -2,6 +2,13 @@
 #    Configuración de AuraCore       #
 # ---------------------------------- #
 
+# Nombres personalizables
+currency:
+  short-name: "CC"          # Abreviatura de Cristales de Carga
+  display-name: "Cristales de Carga"
+aura:
+  name: "Aura"
+
 # Sistema de Reclamo de Chunks (Claim)
 claim:
   normal:

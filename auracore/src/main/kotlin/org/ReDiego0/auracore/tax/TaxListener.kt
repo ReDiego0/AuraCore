@@ -13,7 +13,7 @@ class TaxListener(private val plugin: Auracore) : Listener {
 
     private val townData = TownData(plugin)
     private val prefix = "${ChatColor.AQUA}[AuraCore] ${ChatColor.GRAY}"
-    private val blockMessage : String = "${prefix}${ChatColor.RED}¡El Aura de tu ciudad ha colapsado! No puedes cambiar este permiso.\""
+    private val blockMessage : String = "${prefix}${ChatColor.RED}¡El ${plugin.auraName} de tu ciudad ha colapsado! No puedes cambiar este permiso.\""
 
 
     @EventHandler

@@ -48,7 +48,7 @@ class ClaimCostListener(private val plugin: Auracore) : Listener {
         val townBalanceMP = try {
             TownyEconomyHandler.getBalance(town.name, town.world)
         } catch (e: Exception) {
-            plugin.logger.warning("Error al obtener saldo MP de ${town.name}: ${e.message}")
+            plugin.logger.warning("Error al obtener saldo de ${town.name}: ${e.message}")
             0.0
         }
 
@@ -56,11 +56,11 @@ class ClaimCostListener(private val plugin: Auracore) : Listener {
         var canAfford = true
 
         if (mayorBalanceCC < costCC) {
-            message += "${ChatColor.RED}El alcalde (${mayor.name}) necesita ${String.format("%.2f", costCC - mayorBalanceCC)} CC más. "
+            message += "${ChatColor.RED}El alcalde (${mayor.name}) necesita ${String.format("%.2f", costCC - mayorBalanceCC)} ${plugin.currencyShortName} más. "
             canAfford = false
         }
         if (townBalanceMP < costMP) {
-            message += "${ChatColor.RED}El banco de la ciudad necesita ${String.format("%.2f", costMP - townBalanceMP)} MP más."
+            message += "${ChatColor.RED}El banco de la ciudad necesita ${String.format("%.2f", costMP - townBalanceMP)} ${plugin.currencyShortName} más."
             canAfford = false
         }
 
@@ -72,7 +72,7 @@ class ClaimCostListener(private val plugin: Auracore) : Listener {
                 if (currencyManager.removeBalance(mayor.uuid, costCC)) {
                     chargedCC = true
                 } else {
-                    player.sendMessage("${prefix}${ChatColor.RED}Error inesperado al cobrar ${costCC} CC al alcalde (Saldo actual: $mayorBalanceCC).")
+                    player.sendMessage("${prefix}${ChatColor.RED}Error inesperado al cobrar ${costCC} ${plugin.currencyShortName} al alcalde (Saldo actual: $mayorBalanceCC).")
                     event.isCancelled = true
                     return
                 }
@@ -86,7 +86,7 @@ class ClaimCostListener(private val plugin: Auracore) : Listener {
                     if (success) {
                         chargedMP = true
                     } else {
-                        player.sendMessage("${prefix}${ChatColor.RED}El banco de la ciudad no tiene suficientes fondos (${costMP} MP).")
+                        player.sendMessage("${prefix}${ChatColor.RED}El banco de la ciudad no tiene suficientes fondos (${costMP} ${plugin.currencyShortName}).")
                         event.isCancelled = true
                         if (chargedCC) {
                             currencyManager.addBalance(mayor.uuid, costCC)
@@ -94,7 +94,7 @@ class ClaimCostListener(private val plugin: Auracore) : Listener {
                         return
                     }
                 } catch (e: Exception) {
-                    player.sendMessage("${prefix}${ChatColor.RED}Error al cobrar ${costMP} MP del banco de la ciudad.")
+                    player.sendMessage("${prefix}${ChatColor.RED}Error al cobrar ${costMP} ${plugin.currencyShortName} del banco de la ciudad.")
                     plugin.logger.warning("Error de economía al cobrar a ${town.name}: ${e.javaClass.simpleName} - ${e.message}")
                     event.isCancelled = true
                     if (chargedCC) {
@@ -108,8 +108,8 @@ class ClaimCostListener(private val plugin: Auracore) : Listener {
 
             if (chargedCC && chargedMP) {
                 var successMessage = "${prefix}${ChatColor.GREEN}Chunk reclamado exitosamente."
-                if (costCC > 0) successMessage += " Costo: ${ChatColor.AQUA}${costCC} CC ${ChatColor.GRAY}(Alcalde)"
-                if (costMP > 0) successMessage += " ${ChatColor.GOLD}${costMP} MP ${ChatColor.GRAY}(Ciudad)"
+                if (costCC > 0) successMessage += " Costo: ${ChatColor.AQUA}${costCC} ${plugin.currencyShortName} ${ChatColor.GRAY}(Alcalde)"
+                if (costMP > 0) successMessage += " ${ChatColor.GOLD}${costMP} Créditos ${ChatColor.GRAY}(Ciudad)"
                 player.sendMessage(successMessage)
             }
 

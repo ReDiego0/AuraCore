@@ -13,7 +13,7 @@ class TaxManager(private val plugin: Auracore, private val generatorManager: Gen
 
     private val townData = TownData(plugin)
     private val currencyManager = plugin.currencyManager
-    private val prefix = "${ChatColor.AQUA}[AuraCore] ${ChatColor.GRAY}"
+    private val prefix = "${ChatColor.AQUA}[${plugin.auraName}] ${ChatColor.GRAY}"
     private var scheduledTask: BukkitTask? = null
 
     fun scheduleNextTaxCycle(delayTicks: Long) {
@@ -25,7 +25,7 @@ class TaxManager(private val plugin: Auracore, private val generatorManager: Gen
     }
 
     fun runTaxCollectionCycle() {
-        plugin.logger.info("Iniciando ciclo de cobro de impuestos de Aura (CC)...")
+        plugin.logger.info("Iniciando ciclo de cobro de impuestos de ${plugin.auraName} (${plugin.currencyShortName})...")
         val allTowns = TownyAPI.getInstance().towns
         var townsProcessed = 0
         var townsCollapsed = 0
@@ -67,12 +67,12 @@ class TaxManager(private val plugin: Auracore, private val generatorManager: Gen
                 townsProcessed++
                 val mayorPlayer = mayor.player
                 if (mayorPlayer != null && mayorPlayer.isOnline) {
-                    mayorPlayer.sendMessage("${prefix}${ChatColor.GREEN}Se ha cobrado exitosamente el impuesto de ${finalCost} CC. El Aura de la ciudad es estable.")
+                    mayorPlayer.sendMessage("${prefix}${ChatColor.GREEN}Se ha cobrado exitosamente el impuesto de ${finalCost} ${plugin.currencyShortName}. El ${plugin.auraName} de la ciudad es estable.")
                 }
                 if (townData.hasAuraCollapsed(town)) {
                     townData.setAuraCollapsed(town, false)
                     townData.setAllProtections(town, false)
-                    TownyMessaging.sendPrefixedTownMessage(town, "${prefix}${ChatColor.GREEN}¡El Aura se ha estabilizado! La deuda de ${finalCost} CC ha sido pagada y las protecciones han sido RESTAURADAS.")
+                    TownyMessaging.sendPrefixedTownMessage(town, "${prefix}${ChatColor.GREEN}¡El ${plugin.auraName} se ha estabilizado! La deuda de ${finalCost} ${plugin.currencyShortName} ha sido pagada y las protecciones han sido RESTAURADAS.")
                 }
             } else {
                 townsCollapsed++
@@ -81,13 +81,13 @@ class TaxManager(private val plugin: Auracore, private val generatorManager: Gen
                     townData.setAllProtections(town, true)
                     val mayorPlayer = mayor.player
                     if (mayorPlayer != null && mayorPlayer.isOnline) {
-                        mayorPlayer.sendMessage("${prefix}${ChatColor.RED}¡ALERTA! No pudiste pagar el impuesto de ${finalCost} CC. Tu saldo es ${currencyManager.getBalance(mayor.uuid)}.")
+                        mayorPlayer.sendMessage("${prefix}${ChatColor.RED}¡ALERTA! No pudiste pagar el impuesto de ${finalCost} ${plugin.currencyShortName}. Tu saldo es ${currencyManager.getBalance(mayor.uuid)} ${plugin.currencyShortName}.")
                     }
-                    TownyMessaging.sendPrefixedTownMessage(town, "${prefix}${ChatColor.DARK_GRAY}¡ALERTA! El alcalde no pudo pagar el impuesto de ${finalCost} CC. El Aura ha colapsado. ¡Las protecciones están DESACTIVADAS!")
+                    TownyMessaging.sendPrefixedTownMessage(town, "${prefix}${ChatColor.DARK_GRAY}¡ALERTA! El alcalde no pudo pagar el impuesto de ${finalCost} ${plugin.currencyShortName}. El ${plugin.auraName} ha colapsado. ¡Las protecciones están DESACTIVADAS!")
                 }
             }
         }
-        plugin.logger.info("Ciclo de cobro de impuestos de Aura (CC) finalizado. Ciudades procesadas: $townsProcessed. Ciudades colapsadas: $townsCollapsed.")
+        plugin.logger.info("Ciclo de cobro de impuestos de ${plugin.auraName} (${plugin.currencyShortName}) finalizado. Ciudades procesadas: $townsProcessed. Ciudades colapsadas: $townsCollapsed.")
 
         val currentTimeMillis = System.currentTimeMillis()
         val nextTime = currentTimeMillis + (plugin.taxIntervalTicks * 50L)

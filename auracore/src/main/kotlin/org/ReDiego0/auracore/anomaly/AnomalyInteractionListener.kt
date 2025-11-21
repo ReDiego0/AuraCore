@@ -65,29 +65,29 @@ class AnomalyInteractionListener(
         val randomValue = Random.nextDouble()
         val amount = when {
             randomValue < bonusChance -> bonusAmount
-            else -> Random.nextDouble(minReward, maxReward + 0.1) // Añadir 0.1 para incluir el maximo
-        }.toInt().toDouble() // Convertir a Int para redondear y luego a Double
+            else -> Random.nextDouble(minReward, maxReward + 0.1)
+        }.toInt().toDouble()
 
         val success = currencyManager.addBalance(mayor.uuid, amount)
         if (!success) {
-            plugin.logger.warning("Error al depositar CC al alcalde ${mayor.name} desde la anomalía ${anomalyData.id}")
+            plugin.logger.warning("Error al depositar ${plugin.currencyShortName} al alcalde ${mayor.name} desde la anomalía ${anomalyData.id}")
             player.sendMessage("$prefix${ChatColor.RED}Hubo un error al canalizar la energía. Contacta a un administrador.")
-            return // No eliminar la anomalía si el pago falló
+            return
         }
 
 
         if (amount == bonusAmount) {
-            player.sendMessage("$prefix${ChatColor.GOLD}${ChatColor.BOLD}¡FLUJO MASIVO DETECTADO! ${ChatColor.YELLOW}Has canalizado ${ChatColor.GREEN}${amount} CC ${ChatColor.YELLOW}para tu alcalde, ${mayor.name}!")
+            player.sendMessage("$prefix${ChatColor.GOLD}${ChatColor.BOLD}¡FLUJO MASIVO DETECTADO! ${ChatColor.YELLOW}Has canalizado ${ChatColor.GREEN}${amount} ${plugin.currencyShortName} ${ChatColor.YELLOW}para tu alcalde, ${mayor.name}!")
             player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 0.5f)
             player.playSound(player.location, Sound.ENTITY_WITHER_SPAWN, 0.5f, 1.5f)
         } else {
-            player.sendMessage("$prefix${ChatColor.YELLOW}Has canalizado ${ChatColor.GREEN}${amount} CC ${ChatColor.YELLOW}para tu alcalde, ${mayor.name}.")
+            player.sendMessage("$prefix${ChatColor.YELLOW}Has canalizado ${ChatColor.GREEN}${amount} ${plugin.currencyShortName} ${ChatColor.YELLOW}para tu alcalde, ${mayor.name}.")
             player.playSound(player.location, Sound.BLOCK_BEACON_ACTIVATE, 0.8f, 1.5f)
         }
 
         val mayorPlayer = mayor.player
         if (mayorPlayer != null && mayorPlayer.isOnline) {
-            mayorPlayer.sendMessage("$prefix${ChatColor.YELLOW}Has recibido ${ChatColor.GREEN}${amount} CC ${ChatColor.YELLOW}canalizados por ${player.name} desde una anomalía.")
+            mayorPlayer.sendMessage("$prefix${ChatColor.YELLOW}Has recibido ${ChatColor.GREEN}${amount} ${plugin.currencyShortName} ${ChatColor.YELLOW}canalizados por ${player.name} desde una anomalía.")
         }
 
         HologramHelper.deleteAnomalyHologram(hologramName)

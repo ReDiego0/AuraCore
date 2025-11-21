@@ -26,6 +26,13 @@ class Auracore : JavaPlugin() {
             private set
     }
 
+    var currencyShortName: String = "CC"
+        private set
+    var currencyDisplayName: String = "Cristales de Carga"
+        private set
+    var auraName: String = "AuraCore"
+        private set
+
     lateinit var climateManager: ClimateManager
         private set
     lateinit var currencyManager: CurrencyManager
@@ -136,7 +143,7 @@ class Auracore : JavaPlugin() {
         getCommand("gcc")?.setExecutor(GeneratorCommands(this))
         logger.info("Comandos registrados.")
 
-        logger.info("AuraCore se ha habilitado correctamente.")
+        logger.info("${auraName} se ha habilitado correctamente.")
     }
 
     private fun loadConfigValues() {
@@ -160,11 +167,15 @@ class Auracore : JavaPlugin() {
         anomalyBonusChance = config.getDouble("anomaly.reward.bonus-chance", 0.02)
         anomalyBonusAmountCC = config.getDouble("anomaly.reward.bonus-amount-cc", 300.0)
 
+        currencyShortName = config.getString("currency.short-name", "CC") ?: "CC"
+        currencyDisplayName = config.getString("currency.display-name", "Cristales de Carga") ?: "Cristales de Carga"
+        auraName = config.getString("aura.name", "AuraCore") ?: "AuraCore"
+
         nextTaxTimeMillis = config.getLong("nex-tax-time-millis", 0L)
     }
 
     override fun onDisable() {
-        logger.info("Desactivando AuraCore...")
+        logger.info("Desactivando ${auraName}...")
         server.scheduler.cancelTasks(this)
 
         if (::taxManager.isInitialized) {
@@ -176,12 +187,12 @@ class Auracore : JavaPlugin() {
         }
         if (::currencyManager.isInitialized) {
             currencyManager.saveBalances()
-            logger.info("Saldos de CC guardados.")
+            logger.info("Saldos de ${currencyShortName} guardados.")
         }
         if (::generatorManager.isInitialized) {
             generatorManager.saveGenerators()
             logger.info("Generadores guardados.")
         }
-        logger.info("AuraCore se ha deshabilitado.")
+        logger.info("${auraName} se ha deshabilitado.")
     }
 }

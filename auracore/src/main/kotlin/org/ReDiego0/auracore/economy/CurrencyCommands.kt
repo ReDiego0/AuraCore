@@ -21,7 +21,7 @@ class CurrencyCommands(private val plugin: Auracore) : CommandExecutor {
                 return true
             }
             val balance = currencyManager.getBalance(sender.uniqueId)
-            sender.sendMessage("${prefix}Tu saldo de CC: ${ChatColor.GREEN}${balance}")
+            sender.sendMessage("${prefix}Tu saldo de ${plugin.currencyShortName}: ${ChatColor.GREEN}${balance}")
             return true
         }
 
@@ -48,7 +48,7 @@ class CurrencyCommands(private val plugin: Auracore) : CommandExecutor {
                 return
             }
             val balance = currencyManager.getBalance(sender.uniqueId)
-            sender.sendMessage("${prefix}Tu saldo de CC: ${ChatColor.GREEN}${balance}")
+            sender.sendMessage("${prefix}Tu saldo de ${plugin.currencyShortName}: ${ChatColor.GREEN}${balance}")
 
         } else if (args.size == 2) {
             if (!sender.hasPermission("auracore.admin")) {
@@ -96,24 +96,24 @@ class CurrencyCommands(private val plugin: Auracore) : CommandExecutor {
 
         if (currencyManager.removeBalance(sender.uniqueId, amount)) {
             currencyManager.addBalance(targetPlayer.uniqueId, amount)
-            sender.sendMessage("${prefix}Has enviado ${ChatColor.GREEN}${amount} CC${ChatColor.GRAY} a ${targetPlayer.name}.")
-            targetPlayer.sendMessage("${prefix}Has recibido ${ChatColor.GREEN}${amount} CC${ChatColor.GRAY} de ${sender.name}.")
+            sender.sendMessage("${prefix}Has enviado ${ChatColor.GREEN}${amount} ${plugin.currencyShortName}${ChatColor.GRAY} a ${targetPlayer.name}.")
+            targetPlayer.sendMessage("${prefix}Has recibido ${ChatColor.GREEN}${amount} ${plugin.currencyShortName}${ChatColor.GRAY} de ${sender.name}.")
         } else {
-            sender.sendMessage("${prefix}${ChatColor.RED}No tienes suficientes CC para hacer eso.")
+            sender.sendMessage("${prefix}${ChatColor.RED}No tienes suficientes ${plugin.currencyShortName} para hacer eso.")
         }
     }
 
     private fun handleHelp(sender: CommandSender) {
-        sender.sendMessage("${ChatColor.AQUA}--- Ayuda de AuraCore (CC) ---")
-        sender.sendMessage("${ChatColor.GREEN}/auracc ${ChatColor.GRAY}- Muestra tu saldo de CC.")
-        sender.sendMessage("${ChatColor.GREEN}/auracc pay <jugador> <cantidad> ${ChatColor.GRAY}- Envía CC a otro jugador.")
+        sender.sendMessage("${ChatColor.AQUA}--- Ayuda de AuraCore (${plugin.currencyShortName}) ---")
+        sender.sendMessage("${ChatColor.GREEN}/auracc ${ChatColor.GRAY}- Muestra tu saldo de ${plugin.currencyShortName}.")
+        sender.sendMessage("${ChatColor.GREEN}/auracc pay <jugador> <cantidad> ${ChatColor.GRAY}- Envía ${plugin.currencyShortName} a otro jugador.")
         sender.sendMessage("${ChatColor.GREEN}/auracc ver ${ChatColor.GRAY}- Muestra la versión del plugin.")
         if (sender.hasPermission("auracore.admin")) {
             sender.sendMessage("${ChatColor.YELLOW}--- Comandos de Admin ---")
             sender.sendMessage("${ChatColor.YELLOW}/auracc balance <jugador> ${ChatColor.GRAY}- Muestra el saldo de un jugador.")
-            sender.sendMessage("${ChatColor.YELLOW}/auracc give <jugador> <cantidad> ${ChatColor.GRAY}- Da CC a un jugador.")
-            sender.sendMessage("${ChatColor.YELLOW}/auracc set <jugador> <cantidad> ${ChatColor.GRAY}- Establece el saldo de CC de un jugador.")
-            sender.sendMessage("${ChatColor.YELLOW}/auracc take <jugador> <cantidad> ${ChatColor.GRAY}- Quita CC a un jugador.")
+            sender.sendMessage("${ChatColor.YELLOW}/auracc give <jugador> <cantidad> ${ChatColor.GRAY}- Da ${plugin.currencyShortName} a un jugador.")
+            sender.sendMessage("${ChatColor.YELLOW}/auracc set <jugador> <cantidad> ${ChatColor.GRAY}- Establece el saldo de ${plugin.currencyShortName} de un jugador.")
+            sender.sendMessage("${ChatColor.YELLOW}/auracc take <jugador> <cantidad> ${ChatColor.GRAY}- Quita ${plugin.currencyShortName} a un jugador.")
         }
     }
 
@@ -147,8 +147,8 @@ class CurrencyCommands(private val plugin: Auracore) : CommandExecutor {
 
         currencyManager.addBalance(targetUUID, amount)
         val newBalance = currencyManager.getBalance(targetUUID)
-        sender.sendMessage("${prefix}Has dado ${ChatColor.GREEN}${amount} CC${ChatColor.GRAY} a $targetName. Nuevo saldo: ${ChatColor.GREEN}$newBalance")
-        Bukkit.getPlayer(targetUUID)?.sendMessage("${prefix}${ChatColor.GREEN}Has recibido ${amount} CC ${ChatColor.GRAY}de un administrador.")
+        sender.sendMessage("${prefix}Has dado ${ChatColor.GREEN}${amount} ${plugin.currencyShortName}${ChatColor.GRAY} a $targetName. Nuevo saldo: ${ChatColor.GREEN}$newBalance")
+        Bukkit.getPlayer(targetUUID)?.sendMessage("${prefix}${ChatColor.GREEN}Has recibido ${amount} ${plugin.currencyShortName} ${ChatColor.GRAY}de un administrador.")
     }
 
     private fun handleSet(sender: CommandSender, args: Array<out String>) {
@@ -176,8 +176,8 @@ class CurrencyCommands(private val plugin: Auracore) : CommandExecutor {
         }
 
         currencyManager.setBalance(targetUUID, amount)
-        sender.sendMessage("${prefix}Has establecido el saldo de $targetName en ${ChatColor.GREEN}${amount} CC.")
-        Bukkit.getPlayer(targetUUID)?.sendMessage("${prefix}${ChatColor.YELLOW}Tu saldo de CC ha sido establecido en ${ChatColor.GREEN}${amount} ${ChatColor.YELLOW}por un administrador.")
+        sender.sendMessage("${prefix}Has establecido el saldo de $targetName en ${ChatColor.GREEN}${amount} ${plugin.currencyShortName}.")
+        Bukkit.getPlayer(targetUUID)?.sendMessage("${prefix}${ChatColor.YELLOW}Tu saldo de ${plugin.currencyShortName} ha sido establecido en ${ChatColor.GREEN}${amount} ${ChatColor.YELLOW}por un administrador.")
     }
 
     private fun handleTake(sender: CommandSender, args: Array<out String>) {
@@ -206,8 +206,8 @@ class CurrencyCommands(private val plugin: Auracore) : CommandExecutor {
 
         if (currencyManager.removeBalance(targetUUID, amount)) {
             val newBalance = currencyManager.getBalance(targetUUID)
-            sender.sendMessage("${prefix}Has quitado ${ChatColor.GREEN}${amount} CC${ChatColor.GRAY} a $targetName. Nuevo saldo: ${ChatColor.GREEN}$newBalance")
-            Bukkit.getPlayer(targetUUID)?.sendMessage("${prefix}${ChatColor.RED}Se te han quitado ${amount} CC ${ChatColor.GRAY}por un administrador.")
+            sender.sendMessage("${prefix}Has quitado ${ChatColor.GREEN}${amount} ${plugin.currencyShortName}${ChatColor.GRAY} a $targetName. Nuevo saldo: ${ChatColor.GREEN}$newBalance")
+            Bukkit.getPlayer(targetUUID)?.sendMessage("${prefix}${ChatColor.RED}Se te han quitado ${amount} ${plugin.currencyShortName} ${ChatColor.GRAY}por un administrador.")
         } else {
             sender.sendMessage("${prefix}${ChatColor.RED}$targetName no tiene suficientes fondos. Su saldo es ${currencyManager.getBalance(targetUUID)}")
         }

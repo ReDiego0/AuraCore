@@ -20,16 +20,18 @@ class AuraPAPIExpansion(private val plugin: Auracore) : PlaceholderExpansion() {
 
     override fun onPlaceholderRequest(player: Player?, identifier: String): String? {
         if (identifier == "clima") {
-            return plugin.climateManager.activeClimate.papiTag
+            if (player == null) return "&7Desconocido"
+            val currentClimate = plugin.climateManager.getClimateForWorld(player.world.name)
+            return currentClimate?.papiTag ?: "&7Estable"
         }
 
         if (identifier == "cc") {
             if (player == null) {
                 return "0.0"
             }
-
+            val df = DecimalFormat("#.##")
             val balance = currencyManager.getBalance(player.uniqueId)
-            return DecimalFormat().format(balance)
+            return df.format(balance)
         }
 
         return null
